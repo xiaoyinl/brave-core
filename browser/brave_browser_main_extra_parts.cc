@@ -5,6 +5,7 @@
 #include "brave/browser/brave_browser_main_extra_parts.h"
 
 #include "brave/browser/brave_browser_process_impl.h"
+#include "brave/components/p3a/brave_p3a_service.h"
 #include "chrome/browser/first_run/first_run.h"
 #include "third_party/widevine/cdm/buildflags.h"
 
@@ -30,4 +31,6 @@ void BraveBrowserMainExtraParts::PreMainMessageLoopRun() {
   // So, call it after browser threads are created.
   g_brave_browser_process->brave_widevine_bundle_manager()->StartupCheck();
 #endif
+  // TODO(iefremov): Maybe find a better place for this initialization.
+  g_brave_browser_process->brave_p3a_service()->Init();
 }
