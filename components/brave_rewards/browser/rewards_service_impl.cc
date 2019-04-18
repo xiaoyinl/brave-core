@@ -273,7 +273,6 @@ std::pair<std::string, base::Value> LoadStateOnFileTaskRunner(
   ExtractAndLogP3AStats(*dict);
   result.second = std::move(*dict);
 
-
   return result;
 }
 
