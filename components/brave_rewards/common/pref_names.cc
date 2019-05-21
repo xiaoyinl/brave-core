@@ -25,5 +25,6 @@ const char kRewardsNotificationStartupDelay[] =
     "brave.rewards.notification_startup_delay";
 const char kRewardsExternalWallets[] = "brave.rewards.external_wallets";
 
+const char kUseRewardsStagingServer[] = "brave.rewards.use_staging_server";
 }  // namespace prefs
 }  // namespace brave_rewards
