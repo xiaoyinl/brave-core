@@ -20,7 +20,7 @@ import { reloadTab } from '../api/tabsAPI'
 import {
   removeSiteFilter,
   addSiteCosmeticFilter,
-  applySiteFilters,
+  applyCSSCosmeticFilters,
   removeAllFilters
 } from '../api/cosmeticFilterAPI'
 
@@ -69,8 +69,8 @@ export default function cosmeticFilterReducer (
         state = shieldsPanelState.resetBlockingStats(state, action.tabId)
         state = shieldsPanelState.resetBlockingResources(state, action.tabId)
         state = noScriptState.resetNoScriptInfo(state, action.tabId, getOrigin(action.url))
+        applyCSSCosmeticFilters(action.tabId, getHostname(action.url))
       }
-      applySiteFilters(action.tabId, getHostname(action.url))
       break
     }
     case windowTypes.WINDOW_REMOVED: {
