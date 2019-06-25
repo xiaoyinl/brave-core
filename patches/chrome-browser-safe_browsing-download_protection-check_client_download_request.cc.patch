@@ -1,0 +1,12 @@
+diff --git a/chrome/browser/safe_browsing/download_protection/check_client_download_request.cc b/chrome/browser/safe_browsing/download_protection/check_client_download_request.cc
+index 59a28c8c72340677aaed45e042fe8ad499fa4fed..e3fcd558490b53aba2f29421a3d1b1be6f9f2dab 100644
+--- a/chrome/browser/safe_browsing/download_protection/check_client_download_request.cc
++++ b/chrome/browser/safe_browsing/download_protection/check_client_download_request.cc
+@@ -599,6 +599,7 @@ std::string CheckClientDownloadRequest::SanitizeUrl(const GURL& url) const {
+ 
+ void CheckClientDownloadRequest::SendRequest() {
+   DCHECK_CURRENTLY_ON(BrowserThread::UI);
++  BRAVE_DISABLE_DOWNLOAD_PROTECTION_REMOTE_LOOKUPS
+ 
+   if (item_->GetState() == download::DownloadItem::CANCELLED) {
+     FinishRequest(DownloadCheckResult::UNKNOWN, REASON_DOWNLOAD_DESTROYED);
