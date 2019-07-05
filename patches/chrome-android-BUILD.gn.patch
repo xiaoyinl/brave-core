@@ -1,5 +1,5 @@
 diff --git a/chrome/android/BUILD.gn b/chrome/android/BUILD.gn
-index 02f17d2b4e93d27964fe6663c4feddccc9634619..bd0459db766702d7bc0127914e687421e34852da 100644
+index 02f17d2b4e93d27964fe6663c4feddccc9634619..b4c7d5f78cdc805e2b7df4f022c4829d50b5a3b2 100644
 --- a/chrome/android/BUILD.gn
 +++ b/chrome/android/BUILD.gn
 @@ -38,7 +38,7 @@ if (enable_vr) {
@@ -11,3 +11,21 @@ index 02f17d2b4e93d27964fe6663c4feddccc9634619..bd0459db766702d7bc0127914e687421
  test_manifest_package = "org.chromium.chrome.tests"
  
  chrome_public_jinja_variables = default_chrome_public_jinja_variables +
+@@ -1061,7 +1061,8 @@ jinja_template_resources("chrome_public_apk_template_resources") {
+     "java/res_template/xml/file_paths.xml",
+     "java/res_template/xml/launchershortcuts.xml",
+     "java/res_template/xml/searchable.xml",
+-    "java/res_template/xml/syncadapter.xml",
++#    "java/res_template/xml/syncadapter.xml",
+   ]
+   res_dir = "java/res_template"
+   variables = [ "manifest_package=$manifest_package" ]
+@@ -1072,7 +1073,8 @@ jinja_template_resources("chrome_test_apk_template_resources") {
+     "java/res_template/xml/file_paths.xml",
+     "java/res_template/xml/launchershortcuts.xml",
+     "java/res_template/xml/searchable.xml",
+-    "java/res_template/xml/syncadapter.xml",
++#    "java/res_template/xml/syncadapter.xml",
+   ]
+   res_dir = "java/res_template"
+ 
