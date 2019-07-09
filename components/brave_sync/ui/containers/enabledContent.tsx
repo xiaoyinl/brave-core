@@ -28,8 +28,9 @@ import {
   TableButtonGrid,
   EnabledContent,
   SyncCardContent,
+  Toggle,
   SyncCard
-} from 'brave-ui/features/sync'
+} from '../components'
 
 // Modals
 import RemoveDeviceModal from './modals/removeDevice'
