@@ -24,6 +24,7 @@
 #include "brave/components/brave_sync/brave_sync_service_factory.h"
 #include "brave/content/browser/webui/brave_shared_resources_data_source.h"
 #include "chrome/browser/browser_process.h"
+#include "chrome/browser/profiles/profiles_state.h"
 #include "chrome/common/chrome_constants.h"
 #include "chrome/common/pref_names.h"
 #include "chrome/grit/generated_resources.h"
@@ -47,7 +48,9 @@ base::FilePath BraveProfileManager::GetTorProfilePath() {
 
   ProfileManager* profile_manager = g_browser_process->profile_manager();
 
-  base::FilePath tor_path = profile_manager->user_data_dir();
+  base::FilePath tor_path =
+    profiles::GetDefaultProfileDir(profile_manager->user_data_dir());
+  tor_path = tor_path.Append("session_profiles");  // TODO: define this const
   return tor_path.Append(tor::kTorProfileDir);
 }
 
