@@ -141,7 +141,6 @@ repack("resources") {
   output = "$root_gen_dir/brave/components/brave_sync/brave_sync_resources.pak"
 }
 
-if (!is_android) {
 source_set("testutil") {
   testonly = true
 
@@ -157,5 +156,4 @@ source_set("testutil") {
     "test_util.cc",
     "test_util.h",
   ]
-}
 }
