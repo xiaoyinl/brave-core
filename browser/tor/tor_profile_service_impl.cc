@@ -31,6 +31,8 @@
 #include "services/network/public/mojom/network_context.mojom.h"
 #include "services/network/public/mojom/proxy_lookup_client.mojom.h"
 
+#include "components/prefs/pref_service.h"
+
 using content::BrowserContext;
 using content::BrowserThread;
 using content::NavigationController;
@@ -130,6 +132,9 @@ TorProfileServiceImpl::TorProfileServiceImpl(Profile* profile)
       base::Bind(&TorProfileServiceImpl::OnExtensionsPrefChanged,
                  base::Unretained(this)));
 
+  // TODO: Remove it, for debug use
+  profile_->GetPrefs()->AddPrefObserverAllPrefs(this);
+
   if (GetTorPid() < 0) {
     tor::TorConfig config(GetTorExecutablePath(), GetTorProxyURI());
     LaunchTor(config);
@@ -138,6 +143,7 @@ TorProfileServiceImpl::TorProfileServiceImpl(Profile* profile)
 
 TorProfileServiceImpl::~TorProfileServiceImpl() {
   tor_launcher_factory_->RemoveObserver(this);
+  profile_->GetPrefs()->RemovePrefObserverAllPrefs(this);
 }
 
 void TorProfileServiceImpl::LaunchTor(const TorConfig& config) {
@@ -208,6 +214,12 @@ TorProfileServiceImpl::CreateProxyConfigService() {
 
 void TorProfileServiceImpl::OnExtensionsPrefChanged(const std::string& pref) {
   LOG(ERROR) << __FUNCTION__ << pref;
+}
+
+// TODO: For debug use, remove it
+void TorProfileServiceImpl::OnPreferenceChanged(PrefService* service,
+    const std::string& pref_name) {
+  LOG(ERROR) << __FUNCTION__ << pref_name;
 }
 
 }  // namespace tor

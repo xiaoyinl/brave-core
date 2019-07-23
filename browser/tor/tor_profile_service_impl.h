@@ -15,6 +15,8 @@
 #include "components/prefs/pref_change_registrar.h"
 #include "net/proxy_resolution/proxy_info.h"
 
+#include "components/prefs/pref_observer.h"
+
 class Profile;
 
 namespace net {
@@ -28,6 +30,7 @@ using NewTorCircuitCallback = base::OnceCallback<void(
     const base::Optional<net::ProxyInfo>& proxy_info)>;
 
 class TorProfileServiceImpl : public TorProfileService,
+                              public PrefObserver,   // TODO: For debug use, remove it
                               public base::CheckedObserver {
  public:
   explicit TorProfileServiceImpl(Profile* profile);
@@ -56,6 +59,10 @@ class TorProfileServiceImpl : public TorProfileService,
   TorLauncherFactory* tor_launcher_factory_;  // Singleton
   net::ProxyConfigServiceTor* proxy_config_service_;  // NOT OWNED
   base::WeakPtrFactory<TorProfileServiceImpl> weak_ptr_factory_;
+
+  // TODO: For debug use, remove it
+  void OnPreferenceChanged(PrefService* service,
+      const std::string& pref_name) override;
 
   DISALLOW_COPY_AND_ASSIGN(TorProfileServiceImpl);
 };
