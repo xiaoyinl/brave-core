@@ -8,7 +8,7 @@ index e08bf86f692cf7013291a39efb109b218154d8a5..ac7b34ab661ac630dfd92eb514e74c0f
  
 + protected:
 +  ~FirefoxImporter() override;
-+  
++
   private:
    // Location of favicons in Firefox profile. It may vary depending on Firefox
    // version.
