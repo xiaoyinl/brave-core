@@ -32,7 +32,7 @@ class PhaseOne {
   // We determinate which contribution we want to do and do appropriate actions
   void Start(
       const std::string &viewing_id,
-      const ledger::REWARDS_CATEGORY category,
+      const ledger::REWARDS_TYPE type,
       const braveledger_bat_helper::PublisherList& list,
       const braveledger_bat_helper::Directions& directions,
       double budget,
@@ -50,7 +50,7 @@ class PhaseOne {
 
   void Complete(ledger::Result result,
                 const std::string& viewing_id,
-                int category,
+                int type,
                 const std::string& probi = "0");
 
  private:

@@ -40,7 +40,7 @@ using PublisherBannerCallback =
 using WalletAddressesCallback =
     std::function<void(std::map<std::string, std::string> addresses)>;
 using GetTransactionHistoryCallback =
-    std::function<void(std::unique_ptr<ledger::TransactionsInfo> info)>;
+    std::function<void(std::unique_ptr<ledger_ads::TransactionsInfo> info)>;
 using OnWalletPropertiesCallback = std::function<void(const ledger::Result,
                                   ledger::WalletPropertiesPtr)>;
 using OnRefreshPublisherCallback =
@@ -210,7 +210,7 @@ class LEDGER_EXPORT Ledger {
 
   virtual void OnReconcileCompleteSuccess(
       const std::string& viewing_id,
-      const ledger::REWARDS_CATEGORY category,
+      const ledger::REWARDS_TYPE type,
       const std::string& probi,
       const ledger::ACTIVITY_MONTH month,
       const int year,

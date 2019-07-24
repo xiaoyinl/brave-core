@@ -7,7 +7,6 @@
 #define BAT_LEDGER_LEDGER_IMPL_H_
 
 #include <stdint.h>
-
 #include <memory>
 #include <map>
 #include <string>
@@ -237,7 +236,7 @@ class LedgerImpl : public ledger::Ledger,
   void OnReconcileComplete(ledger::Result result,
                            const std::string& viewing_id,
                            const std::string& probi = "0",
-                           int32_t category = 0);
+                           int32_t type = 0);
 
   std::string URIEncode(const std::string& value) override;
 
@@ -293,7 +292,7 @@ class LedgerImpl : public ledger::Ledger,
                           ledger::PublisherBannerCallback callback) override;
 
   void OnReconcileCompleteSuccess(const std::string& viewing_id,
-                                  const ledger::REWARDS_CATEGORY category,
+                                  const ledger::REWARDS_TYPE type,
                                   const std::string& probi,
                                   const ledger::ACTIVITY_MONTH month,
                                   const int year,
@@ -397,12 +396,13 @@ class LedgerImpl : public ledger::Ledger,
 
   bool ReconcileExists(const std::string& viewingId);
 
-  void SaveContributionInfo(const std::string& probi,
-                            const int month,
-                            const int year,
-                            const uint32_t date,
-                            const std::string& publisher_key,
-                            const ledger::REWARDS_CATEGORY category);
+  void SaveTransactionInfo(
+      const std::string& id,
+      const ledger::REWARDS_TYPE type,
+      const double amount,
+      const std::string& probi,
+      const uint32_t created_date,
+      const uint32_t reconciled_date);
 
   void NormalizeContributeWinners(
       ledger::PublisherInfoList* newList,

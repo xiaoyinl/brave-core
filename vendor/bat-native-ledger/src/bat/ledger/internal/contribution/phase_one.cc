@@ -29,7 +29,7 @@ PhaseOne::~PhaseOne() {
 
 void PhaseOne::Start(
     const std::string& viewing_id,
-    const ledger::REWARDS_CATEGORY category,
+    const ledger::REWARDS_TYPE type,
     const braveledger_bat_helper::PublisherList& list,
     const braveledger_bat_helper::Directions& directions,
     double budget,
@@ -44,23 +44,19 @@ void PhaseOne::Start(
   auto reconcile = braveledger_bat_helper::CURRENT_RECONCILE();
   double fee = .0;
 
-  if (category == ledger::REWARDS_CATEGORY::AUTO_CONTRIBUTE) {
+  if (type == ledger::REWARDS_TYPE::AUTO_CONTRIBUTE) {
     if (list.size() == 0 || budget > balance || budget == 0) {
       if (list.size() == 0 || budget == 0) {
         BLOG(ledger_, ledger::LogLevel::LOG_INFO) <<
           "Auto contribution table is empty";
-        Complete(ledger::Result::AC_TABLE_EMPTY,
-                 viewing_id,
-                 category);
+        Complete(ledger::Result::AC_TABLE_EMPTY, viewing_id, type);
         return;
       }
 
       if (budget > balance) {
         BLOG(ledger_, ledger::LogLevel::LOG_WARNING) <<
           "You do not have enough funds for auto contribution";
-       Complete(ledger::Result::NOT_ENOUGH_FUNDS,
-                viewing_id,
-                category);
+       Complete(ledger::Result::NOT_ENOUGH_FUNDS, viewing_id, type);
         return;
       }
     }
@@ -69,7 +65,7 @@ void PhaseOne::Start(
     fee = budget;
   }
 
-  if (category == ledger::REWARDS_CATEGORY::RECURRING_TIP) {
+  if (type == ledger::REWARDS_TYPE::RECURRING_TIP) {
     double ac_amount = ledger_->GetContributionAmount();
 
     // don't use ac amount if ac is disabled
@@ -80,7 +76,7 @@ void PhaseOne::Start(
     if (list.size() == 0 || budget == 0) {
       Complete(ledger::Result::RECURRING_TABLE_EMPTY,
                viewing_id,
-               ledger::REWARDS_CATEGORY::RECURRING_TIP);
+               ledger::REWARDS_TYPE::RECURRING_TIP);
       BLOG(ledger_, ledger::LogLevel::LOG_INFO) <<
         "Recurring donation list is empty";
       return;
@@ -91,7 +87,7 @@ void PhaseOne::Start(
         "You do not have enough funds to do recurring and auto contribution";
         Complete(ledger::Result::NOT_ENOUGH_FUNDS,
                  viewing_id,
-                 ledger::REWARDS_CATEGORY::AUTO_CONTRIBUTE);
+                 ledger::REWARDS_TYPE::AUTO_CONTRIBUTE);
       return;
     }
 
@@ -99,14 +95,12 @@ void PhaseOne::Start(
     fee = budget;
   }
 
-  if (category == ledger::REWARDS_CATEGORY::ONE_TIME_TIP) {
+  if (type == ledger::REWARDS_TYPE::ONE_TIME_TIP) {
     for (const auto& direction : directions) {
       if (direction.publisher_key_.empty()) {
         BLOG(ledger_, ledger::LogLevel::LOG_ERROR) <<
           "Reconcile direction missing publisher";
-        Complete(ledger::Result::TIP_ERROR,
-                 viewing_id,
-                 category);
+        Complete(ledger::Result::TIP_ERROR, viewing_id, type);
         return;
       }
 
@@ -114,9 +108,7 @@ void PhaseOne::Start(
         BLOG(ledger_, ledger::LogLevel::LOG_ERROR) <<
           "Reconcile direction currency invalid for " <<
           direction.publisher_key_;
-        Complete(ledger::Result::TIP_ERROR,
-                 viewing_id,
-                 category);
+        Complete(ledger::Result::TIP_ERROR, viewing_id, type);
         return;
       }
 
@@ -126,9 +118,7 @@ void PhaseOne::Start(
     if (fee > balance) {
       BLOG(ledger_, ledger::LogLevel::LOG_WARNING) <<
         "You do not have enough funds to do a tip";
-        Complete(ledger::Result::NOT_ENOUGH_FUNDS,
-                 viewing_id,
-                 category);
+        Complete(ledger::Result::NOT_ENOUGH_FUNDS, viewing_id, type);
       return;
     }
   }
@@ -136,7 +126,7 @@ void PhaseOne::Start(
   reconcile.viewingId_ = viewing_id;
   reconcile.fee_ = fee;
   reconcile.directions_ = directions;
-  reconcile.category_ = category;
+  reconcile.type_ = type;
 
   ledger_->AddReconcile(viewing_id, reconcile);
   Reconcile(viewing_id);
@@ -191,7 +181,7 @@ void PhaseOne::ReconcileCallback(
   if (!success) {
     Complete(ledger::Result::LEDGER_ERROR,
              viewing_id,
-             reconcile.category_);
+             reconcile.type_);
     return;
   }
 
@@ -285,7 +275,7 @@ void PhaseOne::CurrentReconcileCallback(
   if (!success) {
     Complete(ledger::Result::LEDGER_ERROR,
              viewing_id,
-             reconcile.category_);
+             reconcile.type_);
     return;
   }
 
@@ -373,7 +363,7 @@ void PhaseOne::ReconcilePayloadCallback(
     if (response_status_code == net::HTTP_REQUESTED_RANGE_NOT_SATISFIABLE) {
       Complete(ledger::Result::CONTRIBUTION_AMOUNT_TOO_LOW,
                viewing_id,
-               reconcile.category_);
+               reconcile.type_);
     } else {
       contribution_->AddRetry(ledger::ContributionRetry::STEP_PAYLOAD,
                               viewing_id);
@@ -464,9 +454,7 @@ void PhaseOne::RegisterViewingCallback(
 
   success = ledger_->UpdateReconcile(reconcile);
   if (!success) {
-    Complete(ledger::Result::LEDGER_ERROR,
-             viewing_id,
-             reconcile.category_);
+    Complete(ledger::Result::LEDGER_ERROR, viewing_id, reconcile.type_);
     return;
   }
 
@@ -572,9 +560,7 @@ void PhaseOne::ViewingCredentialsCallback(
 
   success = ledger_->UpdateReconcile(reconcile);
   if (!success) {
-    Complete(ledger::Result::LEDGER_ERROR,
-             viewing_id,
-             reconcile.category_);
+    Complete(ledger::Result::LEDGER_ERROR, viewing_id, reconcile.type_);
     return;
   }
 
@@ -608,25 +594,25 @@ void PhaseOne::ViewingCredentialsCallback(
   ledger_->SetTransactions(transactions);
   Complete(ledger::Result::LEDGER_OK,
            reconcile.viewingId_,
-           reconcile.category_,
+           reconcile.type_,
            probi);
 }
 
 void PhaseOne::Complete(ledger::Result result,
                         const std::string& viewing_id,
-                        int category,
+                        int type,
                         const std::string& probi) {
   // Start the timer again if it wasn't a direct tip
-  if (category == ledger::REWARDS_CATEGORY::AUTO_CONTRIBUTE) {
+  if (type == ledger::REWARDS_TYPE::AUTO_CONTRIBUTE) {
     contribution_->ResetReconcileStamp();
   }
 
   // Trigger auto contribute after recurring tip
-  if (category == ledger::REWARDS_CATEGORY::RECURRING_TIP) {
+  if (type == ledger::REWARDS_TYPE::RECURRING_TIP) {
     contribution_->StartAutoContribute();
   }
 
-  ledger_->OnReconcileComplete(result, viewing_id, probi, category);
+  ledger_->OnReconcileComplete(result, viewing_id, probi, type);
 
   if (result != ledger::Result::LEDGER_OK) {
     ledger_->RemoveReconcileById(viewing_id);

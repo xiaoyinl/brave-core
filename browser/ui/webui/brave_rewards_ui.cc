@@ -163,7 +163,7 @@ class RewardsDOMHandler : public WebUIMessageHandler,
   void OnReconcileComplete(brave_rewards::RewardsService* rewards_service,
                            unsigned int result,
                            const std::string& viewing_id,
-                           int32_t category,
+                           int32_t type,
                            const std::string& probi) override;
   void OnPendingContributionSaved(
       brave_rewards::RewardsService* rewards_service,
@@ -186,7 +186,7 @@ class RewardsDOMHandler : public WebUIMessageHandler,
   void OnRecurringTipRemoved(brave_rewards::RewardsService* rewards_service,
                              bool success) override;
 
-  void OnContributionSaved(
+  void OnTransactionSaved(
     brave_rewards::RewardsService* rewards_service,
     bool success,
     int category) override;
@@ -872,12 +872,12 @@ void RewardsDOMHandler::OnReconcileComplete(
     brave_rewards::RewardsService* rewards_service,
     unsigned int result,
     const std::string& viewing_id,
-    int32_t category,
+    int32_t type,
     const std::string& probi) {
   if (web_ui()->CanCallJavascript()) {
     base::DictionaryValue complete;
     complete.SetKey("result", base::Value(static_cast<int>(result)));
-    complete.SetKey("category", base::Value(category));
+    complete.SetKey("type", base::Value(type));
 
     web_ui()->CallJavascriptFunctionUnsafe("brave_rewards.reconcileComplete",
                                            complete);
@@ -1157,20 +1157,20 @@ void RewardsDOMHandler::OnRecurringTipRemoved(
       "brave_rewards.recurringTipRemoved", base::Value(success));
 }
 
-void RewardsDOMHandler::OnContributionSaved(
+void RewardsDOMHandler::OnTransactionSaved(
     brave_rewards::RewardsService* rewards_service,
     bool success,
-    int category) {
+    int type) {
   if (!web_ui()->CanCallJavascript()) {
      return;
   }
 
   base::DictionaryValue result;
   result.SetBoolean("success", success);
-  result.SetInteger("category", category);
+  result.SetInteger("type", type);
 
   web_ui()->CallJavascriptFunctionUnsafe(
-      "brave_rewards.onContributionSaved", result);
+      "brave_rewards.onTransactionSaved", result);
 }
 
 void RewardsDOMHandler::SetInlineTipSetting(const base::ListValue* args) {
@@ -1210,7 +1210,7 @@ void RewardsDOMHandler::OnGetPendingContributions(
       contribution->SetKey("amount", base::Value(item.amount));
       contribution->SetKey("addedDate",
           base::Value(std::to_string(item.added_date)));
-      contribution->SetKey("category", base::Value(item.category));
+      contribution->SetKey("type", base::Value(item.type));
       contribution->SetKey("viewingId", base::Value(item.viewing_id));
       contribution->SetKey("expirationDate",
           base::Value(std::to_string(item.expiration_date)));

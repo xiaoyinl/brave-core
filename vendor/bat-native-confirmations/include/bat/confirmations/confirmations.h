@@ -28,8 +28,8 @@ extern bool _is_debug;
 
 extern const char _confirmations_name[];
 
-using TransactionInfo = ::ledger::TransactionInfo;
-using TransactionsInfo = ::ledger::TransactionsInfo;
+using TransactionInfo = ::ledger_ads::TransactionInfo;
+using TransactionsInfo = ::ledger_ads::TransactionsInfo;
 
 using OnGetTransactionHistory = ::ledger::GetTransactionHistoryCallback;
 

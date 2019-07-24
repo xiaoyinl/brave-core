@@ -5,7 +5,7 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-@class ActivityInfo, ContributionInfo, RecurringDonation, PendingContribution;
+@class ActivityInfo, TransactionInfo, RecurringDonation, PendingContribution;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *url;
 @property (nonatomic) BOOL verified;
 @property (nullable, nonatomic, retain) NSSet<ActivityInfo *> *activities;
-@property (nullable, nonatomic, retain) NSSet<ContributionInfo *> *contributions;
+@property (nullable, nonatomic, retain) NSSet<TransactionInfo *> *transactions;
 @property (nullable, nonatomic, retain) NSSet<RecurringDonation *> *recurringDonations;
 @property (nullable, nonatomic, retain) NSSet<PendingContribution *> *pendingContributions;
 
@@ -34,10 +34,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)addActivities:(NSSet<ActivityInfo *> *)values;
 - (void)removeActivities:(NSSet<ActivityInfo *> *)values;
 
-- (void)addContributionsObject:(ContributionInfo *)value;
-- (void)removeContributionsObject:(ContributionInfo *)value;
-- (void)addContributions:(NSSet<ContributionInfo *> *)values;
-- (void)removeContributions:(NSSet<ContributionInfo *> *)values;
+- (void)addTransactionsObject:(TransactionInfo *)value;
+- (void)removeTransactionsObject:(TransactionInfo *)value;
+- (void)addTransactions:(NSSet<TransactionInfo *> *)values;
+- (void)removeTransactions:(NSSet<TransactionInfo *> *)values;
 
 - (void)addRecurringDonationsObject:(RecurringDonation *)value;
 - (void)removeRecurringDonationsObject:(RecurringDonation *)value;

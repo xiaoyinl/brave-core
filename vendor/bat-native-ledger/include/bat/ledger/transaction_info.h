@@ -11,7 +11,7 @@
 
 #include "bat/ledger/export.h"
 
-namespace ledger {
+namespace ledger_ads {
 
 LEDGER_EXPORT struct TransactionInfo {
   TransactionInfo();
@@ -23,6 +23,6 @@ LEDGER_EXPORT struct TransactionInfo {
   std::string confirmation_type;
 };
 
-}  // namespace ledger
+}  // namespace ledger_ads
 
 #endif  // BAT_LEDGER_TRANSACTION_INFO_

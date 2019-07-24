@@ -35,8 +35,8 @@ ledger::ReportType ToLedgerReportType(int32_t type) {
   return (ledger::ReportType)type;
 }
 
-ledger::REWARDS_CATEGORY ToLedgerPublisherCategory(int32_t category) {
-  return (ledger::REWARDS_CATEGORY)category;
+ledger::REWARDS_TYPE ToLedgerPublisherType(int32_t type) {
+  return (ledger::REWARDS_TYPE)type;
 }
 
 }  // namespace
@@ -171,11 +171,11 @@ void BatLedgerImpl::SetBalanceReportItem(int32_t month,
 }
 
 void BatLedgerImpl::OnReconcileCompleteSuccess(const std::string& viewing_id,
-    int32_t category, const std::string& probi, int32_t month,
-    int32_t year, uint32_t data) {
+    int32_t type, const std::string& probi, int32_t month,
+    int32_t year, uint32_t date) {
   ledger_->OnReconcileCompleteSuccess(viewing_id,
-      ToLedgerPublisherCategory(category), probi,
-      ToLedgerPublisherMonth(month), year, data);
+      ToLedgerPublisherType(type), probi,
+      ToLedgerPublisherMonth(month), year, date);
 }
 
 void BatLedgerImpl::FetchGrants(const std::string& lang,
@@ -394,7 +394,7 @@ void BatLedgerImpl::ConfirmAd(const std::string& info) {
 // static
 void BatLedgerImpl::OnGetTransactionHistory(
     CallbackHolder<GetTransactionHistoryCallback>* holder,
-    std::unique_ptr<ledger::TransactionsInfo> history) {
+    std::unique_ptr<ledger_ads::TransactionsInfo> history) {
   std::string json_transactions = history.get() ? history->ToJson() : "";
   if (holder->is_valid())
     std::move(holder->get()).Run(json_transactions);

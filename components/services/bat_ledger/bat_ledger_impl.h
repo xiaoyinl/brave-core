@@ -69,8 +69,8 @@ class BatLedgerImpl : public mojom::BatLedger,
       int32_t month, int32_t year, int32_t type,
       const std::string& probi) override;
   void OnReconcileCompleteSuccess(const std::string& viewing_id,
-      int32_t category, const std::string& probi, int32_t month,
-      int32_t year, uint32_t data) override;
+      int32_t type, const std::string& probi, int32_t month,
+      int32_t year, uint32_t date) override;
 
   void FetchGrants(
       const std::string& lang, const std::string& payment_id) override;
@@ -222,7 +222,7 @@ class BatLedgerImpl : public mojom::BatLedger,
 
   static void OnGetTransactionHistory(
       CallbackHolder<GetTransactionHistoryCallback>* holder,
-      std::unique_ptr<ledger::TransactionsInfo> history);
+      std::unique_ptr<ledger_ads::TransactionsInfo> history);
 
   static void OnGetRecurringTips(
       CallbackHolder<GetRecurringTipsCallback>* holder,

@@ -108,7 +108,7 @@ void Unverified::OnContributeUnverifiedPublishers(
         <braveledger_bat_helper::RECONCILE_DIRECTION> { direction };
     contribution_->InitReconcile(
         ledger_->GenerateGUID(),
-        ledger::REWARDS_CATEGORY::ONE_TIME_TIP,
+        ledger::REWARDS_TYPE::ONE_TIME_TIP,
         list,
         direction_list);
 

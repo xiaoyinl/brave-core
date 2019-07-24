@@ -9,16 +9,14 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface ContributionInfo : NSManagedObject
+@interface TransactionInfo : NSManagedObject
 
-+ (NSFetchRequest<ContributionInfo *> *)fetchRequest;
++ (NSFetchRequest<TransactionInfo *> *)fetchRequest;
 
-@property (nonatomic) int32_t category;
+@property (nonatomic) int32_t type;
 @property (nonatomic) int64_t date;
-@property (nonatomic) int32_t month;
 @property (nonatomic, copy) NSString *probi;
 @property (nonatomic, copy) NSString *publisherID;
-@property (nonatomic) int32_t year;
 @property (nonatomic, retain) PublisherInfo *publisher;
 
 @end

@@ -5,7 +5,7 @@
 
 #include "bat/ledger/transaction_info.h"
 
-namespace ledger {
+namespace ledger_ads {
 
 TransactionInfo::TransactionInfo() :
     timestamp_in_seconds(0),
@@ -19,4 +19,4 @@ TransactionInfo::TransactionInfo(const TransactionInfo& info) :
 
 TransactionInfo::~TransactionInfo() = default;
 
-}  // namespace ledger
+}  // namespace ledger_ads

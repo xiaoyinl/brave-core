@@ -8,7 +8,7 @@
 #include "base/values.h"
 #include "bat/ledger/transactions_info.h"
 
-namespace ledger {
+namespace ledger_ads {
 
 TransactionsInfo::TransactionsInfo() :
     estimated_pending_rewards(0.0),
@@ -188,4 +188,4 @@ std::vector<TransactionInfo> TransactionsInfo::GetTransactionsFromJson(
   return transactions;
 }
 
-}  // namespace ledger
+}  // namespace ledger_ads

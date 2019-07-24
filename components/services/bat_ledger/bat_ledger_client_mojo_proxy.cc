@@ -25,8 +25,8 @@ ledger::Result ToLedgerResult(int32_t result) {
   return (ledger::Result)result;
 }
 
-int32_t ToMojomPublisherCategory(ledger::REWARDS_CATEGORY category) {
-  return (int32_t)category;
+int32_t ToMojomTransactionType(ledger::REWARDS_TYPE type) {
+  return (int32_t)type;
 }
 
 int32_t ToMojomMethod(ledger::URL_METHOD method) {
@@ -184,13 +184,13 @@ void BatLedgerClientMojoProxy::OnRecoverWallet(
 
 void BatLedgerClientMojoProxy::OnReconcileComplete(ledger::Result result,
     const std::string& viewing_id,
-    ledger::REWARDS_CATEGORY category,
+    ledger::REWARDS_TYPE type,
     const std::string& probi) {
   if (!Connected())
     return;
 
   bat_ledger_client_->OnReconcileComplete(ToMojomResult(result), viewing_id,
-      ToMojomPublisherCategory(category), probi);
+      ToMojomTransactionType(type), probi);
 }
 
 std::unique_ptr<ledger::LogStream> BatLedgerClientMojoProxy::Log(
@@ -521,17 +521,19 @@ void BatLedgerClientMojoProxy::OnRemoveRecurring(
       base::BindOnce(&OnRecurringRemoved, std::move(callback)));
 }
 
-void BatLedgerClientMojoProxy::SaveContributionInfo(const std::string& probi,
-    const int month,
-    const int year,
-    const uint32_t date,
-    const std::string& publisher_key,
-    const ledger::REWARDS_CATEGORY category) {
-  if (!Connected())
+void BatLedgerClientMojoProxy::SaveTransactionInfo(
+    const std::string& id,
+    const ledger::REWARDS_TYPE type,
+    const double amount,
+    const std::string& probi,
+    const uint32_t created_date,
+    const uint32_t reconciled_date) {
+  if (!Connected()) {
     return;
+  }
 
-  bat_ledger_client_->SaveContributionInfo(probi, month, year, date,
-      publisher_key, ToMojomPublisherCategory(category));
+  bat_ledger_client_->SaveTransactionInfo(id, type, amount, probi,
+      created_date, reconciled_date);
 }
 
 void BatLedgerClientMojoProxy::SaveMediaPublisherInfo(

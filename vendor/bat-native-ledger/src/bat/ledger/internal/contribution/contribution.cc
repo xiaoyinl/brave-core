@@ -190,7 +190,7 @@ ledger::PublisherInfoList Contribution::GetVerifiedListAuto(
         (static_cast<double>(publisher->percent) / 100) * ac_amount;
     contribution->publisher_key = publisher->id;
     contribution->viewing_id = viewing_id;
-    contribution->category = ledger::REWARDS_CATEGORY::AUTO_CONTRIBUTE;
+    contribution->type = ledger::REWARDS_TYPE::AUTO_CONTRIBUTE;
 
     non_verified_bat += contribution->amount;
     non_verified.push_back(std::move(contribution));
@@ -225,7 +225,7 @@ ledger::PublisherInfoList Contribution::GetVerifiedListRecurring(
       contribution->amount = publisher->weight;
       contribution->publisher_key = publisher->id;
       contribution->viewing_id = viewing_id;
-      contribution->category = ledger::REWARDS_CATEGORY::RECURRING_TIP;
+      contribution->type = ledger::REWARDS_TYPE::RECURRING_TIP;
 
       non_verified.push_back(std::move(contribution));
     }
@@ -239,14 +239,14 @@ ledger::PublisherInfoList Contribution::GetVerifiedListRecurring(
 }
 
 void Contribution::ReconcilePublisherList(
-    ledger::REWARDS_CATEGORY category,
+    ledger::REWARDS_TYPE type,
     ledger::PublisherInfoList list,
     uint32_t next_record) {
   std::string viewing_id = ledger_->GenerateGUID();
   ledger::PublisherInfoList verified_list;
   double budget = 0.0;
 
-  if (category == ledger::REWARDS_CATEGORY::AUTO_CONTRIBUTE) {
+  if (type == ledger::REWARDS_TYPE::AUTO_CONTRIBUTE) {
     ledger::PublisherInfoList normalized_list;
     ledger_->NormalizeContributeWinners(&normalized_list, &list, 0);
     verified_list = GetVerifiedListAuto(viewing_id, &normalized_list, &budget);
@@ -268,7 +268,7 @@ void Contribution::ReconcilePublisherList(
     new_list.push_back(new_publisher);
   }
 
-  InitReconcile(viewing_id, category, new_list, {}, budget);
+  InitReconcile(viewing_id, type, new_list, {}, budget);
 }
 
 void Contribution::ResetReconcileStamp() {
@@ -285,7 +285,7 @@ void Contribution::StartMonthlyContribution() {
   ledger_->GetRecurringTips(
       std::bind(&Contribution::ReconcilePublisherList,
                 this,
-                ledger::REWARDS_CATEGORY::RECURRING_TIP,
+                ledger::REWARDS_TYPE::RECURRING_TIP,
                 _1,
                 _2));
 }
@@ -318,14 +318,14 @@ void Contribution::StartAutoContribute() {
       filter,
       std::bind(&Contribution::ReconcilePublisherList,
                 this,
-                ledger::REWARDS_CATEGORY::AUTO_CONTRIBUTE,
+                ledger::REWARDS_TYPE::AUTO_CONTRIBUTE,
                 _1,
                 _2));
 }
 
 void Contribution::OnBalanceForReconcile(
     const std::string& viewing_id,
-    const ledger::REWARDS_CATEGORY category,
+    const ledger::REWARDS_TYPE type,
     const braveledger_bat_helper::PublisherList& list,
     const braveledger_bat_helper::Directions& directions,
     double budget,
@@ -336,12 +336,12 @@ void Contribution::OnBalanceForReconcile(
          "We couldn't get balance from the server.";
     phase_one_->Complete(ledger::Result::LEDGER_ERROR,
                          viewing_id,
-                         category);
+                         type);
     return;
   }
 
   phase_one_->Start(viewing_id,
-                    category,
+                    type,
                     list,
                     directions,
                     budget,
@@ -350,7 +350,7 @@ void Contribution::OnBalanceForReconcile(
 
 void Contribution::InitReconcile(
     const std::string& viewing_id,
-    const ledger::REWARDS_CATEGORY category,
+    const ledger::REWARDS_TYPE type,
     const braveledger_bat_helper::PublisherList& list,
     const braveledger_bat_helper::Directions& directions,
     double budget) {
@@ -358,7 +358,7 @@ void Contribution::InitReconcile(
       std::bind(&Contribution::OnBalanceForReconcile,
                 this,
                 viewing_id,
-                category,
+                type,
                 list,
                 directions,
                 budget,
@@ -414,21 +414,25 @@ void Contribution::SetTimer(uint32_t* timer_id, uint64_t start_timer_in) {
 
 void Contribution::OnReconcileCompleteSuccess(
     const std::string& viewing_id,
-    ledger::REWARDS_CATEGORY category,
+    ledger::REWARDS_TYPE type,
     const std::string& probi,
     ledger::ACTIVITY_MONTH month,
     int year,
     uint32_t date) {
-  if (category == ledger::REWARDS_CATEGORY::AUTO_CONTRIBUTE) {
+  auto reconciled_date = std::time(nullptr);
+
+  if (type == ledger::REWARDS_TYPE::AUTO_CONTRIBUTE) {
     ledger_->SetBalanceReportItem(month,
                                   year,
                                   ledger::ReportType::AUTO_CONTRIBUTION,
                                   probi);
-    ledger_->SaveContributionInfo(probi, month, year, date, "", category);
+    ledger_->SaveTransactionInfo(viewing_id, type, 0.0 /* amount */, probi,
+        date, reconciled_date);
+
     return;
   }
 
-  if (category == ledger::REWARDS_CATEGORY::ONE_TIME_TIP) {
+  if (type == ledger::REWARDS_TYPE::ONE_TIME_TIP) {
     ledger_->SetBalanceReportItem(month,
                                   year,
                                   ledger::ReportType::TIP,
@@ -436,18 +440,14 @@ void Contribution::OnReconcileCompleteSuccess(
     auto reconcile = ledger_->GetReconcileById(viewing_id);
     auto donations = reconcile.directions_;
     if (donations.size() > 0) {
-      std::string publisher_key = donations[0].publisher_key_;
-      ledger_->SaveContributionInfo(probi,
-                                    month,
-                                    year,
-                                    date,
-                                    publisher_key,
-                                    category);
+      ledger_->SaveTransactionInfo(viewing_id, type, 0.0 /* amount */, probi,
+          date, reconciled_date);
     }
+
     return;
   }
 
-  if (category == ledger::REWARDS_CATEGORY::RECURRING_TIP) {
+  if (type == ledger::REWARDS_TYPE::RECURRING_TIP) {
     auto reconcile = ledger_->GetReconcileById(viewing_id);
     ledger_->SetBalanceReportItem(month,
                                   year,
@@ -458,12 +458,8 @@ void Contribution::OnReconcileCompleteSuccess(
       const std::string probi =
           std::to_string(static_cast<int>(publisher.weight_)) +
           "000000000000000000";
-      ledger_->SaveContributionInfo(probi,
-                                    month,
-                                    year,
-                                    date,
-                                    publisher.id_,
-                                    category);
+      ledger_->SaveTransactionInfo(viewing_id, type, 0.0 /* amount */, probi,
+          date, reconciled_date);
     }
     return;
   }
@@ -484,10 +480,10 @@ void Contribution::AddRetry(
 
   // Don't retry one-time tip if in phase 1
   if (GetRetryPhase(step) == 1 &&
-      reconcile.category_ == ledger::REWARDS_CATEGORY::ONE_TIME_TIP) {
+      reconcile.type_ == ledger::REWARDS_TYPE::ONE_TIME_TIP) {
     phase_one_->Complete(ledger::Result::TIP_ERROR,
                          viewing_id,
-                         reconcile.category_);
+                         reconcile.type_);
     return;
   }
 
@@ -498,7 +494,7 @@ void Contribution::AddRetry(
   if (!success || start_timer_in == 0) {
     phase_one_->Complete(ledger::Result::LEDGER_ERROR,
                          viewing_id,
-                         reconcile.category_);
+                         reconcile.type_);
     return;
   }
 

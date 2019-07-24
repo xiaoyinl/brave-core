@@ -42,7 +42,7 @@ private:
   void OnGrantCaptcha(const std::string & image, const std::string & hint) override;
   void OnGrantFinish(ledger::Result result, ledger::GrantPtr grant) override;
   void OnPanelPublisherInfo(ledger::Result result, ledger::PublisherInfoPtr publisher_info, uint64_t windowId) override;
-  void OnReconcileComplete(ledger::Result result, const std::string & viewing_id, ledger::REWARDS_CATEGORY category, const std::string & probi) override;
+  void OnReconcileComplete(ledger::Result result, const std::string & viewing_id, ledger::REWARDS_TYPE type, const std::string & probi) override;
   void OnRecoverWallet(ledger::Result result, double balance, std::vector<ledger::GrantPtr> grants) override;
   void OnRemoveRecurring(const std::string & publisher_key, ledger::RecurringRemoveCallback callback) override;
   void OnRestorePublishers(ledger::OnRestoreCallback callback) override;
@@ -52,7 +52,7 @@ private:
   void RemovePendingContribution(const std::string & publisher_key, const std::string & viewing_id, uint64_t added_date, const ledger::RemovePendingContributionCallback & callback) override;
   void ResetState(const std::string & name, ledger::OnResetCallback callback) override;
   void SaveActivityInfo(ledger::PublisherInfoPtr publisher_info, ledger::PublisherInfoCallback callback) override;
-  void SaveContributionInfo(const std::string & probi, const int month, const int year, const uint32_t date, const std::string & publisher_key, const ledger::REWARDS_CATEGORY category) override;
+  void SaveTransactionInfo(const std::string & probi, const uint32_t date, const std::string & publisher_key, const ledger::REWARDS_TYPE type) override;
   void SaveLedgerState(const std::string & ledger_state, ledger::LedgerCallbackHandler * handler) override;
   void SaveMediaPublisherInfo(const std::string & media_key, const std::string & publisher_id) override;
   void SaveNormalizedPublisherList(ledger::PublisherInfoList normalized_list) override;

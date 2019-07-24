@@ -12,21 +12,21 @@ PendingContributionInfo::PendingContributionInfo() :
   added_date(0) {
 }
 
-PendingContributionInfo::~PendingContributionInfo() { }
-
 PendingContributionInfo::PendingContributionInfo(
-    const PendingContributionInfo& data) {
-  publisher_key = data.publisher_key;
-  verified = data.verified;
-  name = data.name;
-  favicon_url = data.favicon_url;
-  url = data.url;
-  provider = data.provider;
-  amount = data.amount;
-  added_date = data.added_date;
-  viewing_id = data.viewing_id;
-  category = data.category;
-  expiration_date = data.expiration_date;
+    const PendingContributionInfo& info) {
+  publisher_key = info.publisher_key;
+  verified = info.verified;
+  name = info.name;
+  favicon_url = info.favicon_url;
+  url = info.url;
+  provider = info.provider;
+  amount = info.amount;
+  added_date = info.added_date;
+  viewing_id = info.viewing_id;
+  type = info.type;
+  expiration_date = info.expiration_date;
 }
+
+PendingContributionInfo::~PendingContributionInfo() = default;
 
 }  // namespace brave_rewards

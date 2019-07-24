@@ -322,7 +322,7 @@ struct CURRENT_RECONCILE {
   std::string currency_;
   double fee_;
   Directions directions_;
-  int category_;
+  int type_;
   PublisherList list_;
   ledger::ContributionRetry retry_step_;
   int retry_level_;

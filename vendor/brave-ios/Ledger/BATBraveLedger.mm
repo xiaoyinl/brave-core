@@ -636,25 +636,25 @@ BATLedgerReadonlyBridge(double, defaultContributionAmount, GetDefaultContributio
 
 #pragma mark - Reconcile
 
-- (void)onReconcileComplete:(ledger::Result)result viewingId:(const std::string &)viewing_id category:(ledger::REWARDS_CATEGORY)category probi:(const std::string &)probi
+- (void)onReconcileComplete:(ledger::Result)result viewingId:(const std::string &)viewing_id category:(ledger::REWARDS_TYPE)type probi:(const std::string &)probi
 {
   if (result == ledger::Result::LEDGER_OK) {
     const auto now = [NSDate date];
     const auto nowTimestamp = [now timeIntervalSince1970];
 
-    if (category == ledger::REWARDS_CATEGORY::RECURRING_TIP) {
+    if (type == ledger::REWARDS_TYPE::RECURRING_TIP) {
       [self showTipsProcessedNotificationIfNeccessary];
     }
 
     ledger->OnReconcileCompleteSuccess(viewing_id,
-                                       category,
+                                       type,
                                        probi,
                                        BATGetPublisherMonth(now),
                                        BATGetPublisherYear(now),
                                        nowTimestamp);
   }
 
-  if ((result == ledger::Result::LEDGER_OK && category == ledger::REWARDS_CATEGORY::AUTO_CONTRIBUTE) ||
+  if ((result == ledger::Result::LEDGER_OK && category == ledger::REWARDS_TYPE::AUTO_CONTRIBUTE) ||
       result == ledger::Result::LEDGER_ERROR ||
       result == ledger::Result::NOT_ENOUGH_FUNDS ||
       result == ledger::Result::TIP_ERROR) {
@@ -662,7 +662,7 @@ BATLedgerReadonlyBridge(double, defaultContributionAmount, GetDefaultContributio
     const auto viewingId = [NSString stringWithUTF8String:viewing_id.c_str()];
     const auto info = @{ @"viewingId": viewingId,
                          @"result": @((BATResult)result),
-                         @"category": @((BATRewardsCategory)category),
+                         @"type": @((BATRewardsType)type),
                          @"amount": [NSString stringWithUTF8String:probi.c_str()] };
 
     [self addNotificationOfKind:BATRewardsNotificationKindAutoContribute
@@ -677,7 +677,7 @@ BATLedgerReadonlyBridge(double, defaultContributionAmount, GetDefaultContributio
     if (observer.reconcileCompleted) {
       observer.reconcileCompleted(static_cast<BATResult>(result),
                                   [NSString stringWithUTF8String:viewing_id.c_str()],
-                                  static_cast<BATRewardsCategory>(category),
+                                  static_cast<BATRewardsType>(type),
                                   [NSString stringWithUTF8String:probi.c_str()]);
     }
   }
@@ -1515,19 +1515,19 @@ BATLedgerBridge(BOOL,
   }
 }
 
-- (void)saveContributionInfo:(const std::string &)probi month:(const int)month year:(const int)year date:(const uint32_t)date publisherKey:(const std::string &)publisher_key category:(const ledger::REWARDS_CATEGORY)category
+- (void)saveContributionInfo:(const std::string &)probi month:(const int)month year:(const int)year date:(const uint32_t)date publisherKey:(const std::string &)publisher_key category:(const ledger::REWARDS_TYPE)type
 {
   [BATLedgerDatabase insertContributionInfo:[NSString stringWithUTF8String:probi.c_str()]
                                       month:month
                                        year:year
                                        date:date
                                publisherKey:[NSString stringWithUTF8String:publisher_key.c_str()]
-                                   category:(BATRewardsCategory)category
+                                   category:(BATRewardsType)type
                                  completion:^(BOOL success) {
                                    for (BATBraveLedgerObserver *observer in self.observers) {
                                      if (observer.contributionAdded) {
                                        observer.contributionAdded(success,
-                                                                  static_cast<BATRewardsCategory>(category));
+                                                                  static_cast<BATRewardsType>(type));
                                      }
                                    }
                                  }];

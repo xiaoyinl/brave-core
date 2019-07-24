@@ -40,18 +40,18 @@ void PhaseTwo::Start(const std::string& viewing_id) {
   unsigned int ballots_count = GetBallotsCount(viewing_id);
   const auto reconcile = ledger_->GetReconcileById(viewing_id);
 
-  switch (reconcile.category_) {
-    case ledger::REWARDS_CATEGORY::AUTO_CONTRIBUTE: {
+  switch (reconcile.type_) {
+    case ledger::REWARDS_TYPE::AUTO_CONTRIBUTE: {
       GetContributeWinners(ballots_count, viewing_id, reconcile.list_);
       break;
     }
 
-    case ledger::REWARDS_CATEGORY::RECURRING_TIP: {
+    case ledger::REWARDS_TYPE::RECURRING_TIP: {
       GetTipsWinners(ballots_count, viewing_id, reconcile.list_);
       break;
     }
 
-    case ledger::REWARDS_CATEGORY::ONE_TIME_TIP: {
+    case ledger::REWARDS_TYPE::ONE_TIME_TIP: {
       // Direct one-time contribution
       braveledger_bat_helper::WINNERS_ST winner;
       winner.votes_ = ballots_count;
@@ -61,8 +61,7 @@ void PhaseTwo::Start(const std::string& viewing_id) {
       winner.publisher_data_.visits_ = 0;
       winner.publisher_data_.percent_ = 0;
       winner.publisher_data_.weight_ = 0;
-      VotePublishers(braveledger_bat_helper::Winners { winner },
-                     viewing_id);
+      VotePublishers(braveledger_bat_helper::Winners { winner }, viewing_id);
       break;
     }
 

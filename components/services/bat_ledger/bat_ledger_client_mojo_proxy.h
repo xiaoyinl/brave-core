@@ -6,6 +6,7 @@
 #ifndef BRAVE_COMPONENTS_SERVICES_BAT_LEDGER_BAT_LEDGER_CLIENT_MOJO_PROXY_H_
 #define BRAVE_COMPONENTS_SERVICES_BAT_LEDGER_BAT_LEDGER_CLIENT_MOJO_PROXY_H_
 
+
 #include <map>
 #include <memory>
 #include <string>
@@ -41,7 +42,7 @@ class BatLedgerClientMojoProxy : public ledger::LedgerClient,
                       std::vector<ledger::GrantPtr> grants) override;
   void OnReconcileComplete(ledger::Result result,
                            const std::string& viewing_id,
-                           ledger::REWARDS_CATEGORY category,
+                           ledger::REWARDS_TYPE type,
                            const std::string& probi) override;
   void OnGrantFinish(ledger::Result result,
                      ledger::GrantPtr grant) override;
@@ -79,12 +80,15 @@ class BatLedgerClientMojoProxy : public ledger::LedgerClient,
   void FetchFavIcon(const std::string& url,
                     const std::string& favicon_key,
                     ledger::FetchIconCallback callback) override;
-  void SaveContributionInfo(const std::string& probi,
-                            const int month,
-                            const int year,
-                            const uint32_t date,
-                            const std::string& publisher_key,
-                            const ledger::REWARDS_CATEGORY category) override;
+
+  void SaveTransactionInfo(
+      const std::string& id,
+      const ledger::REWARDS_TYPE type,
+      const double amount,
+      const std::string& probi,
+      const uint32_t created_date,
+      const uint32_t reconciled_date) override;
+
   void GetRecurringTips(ledger::PublisherInfoListCallback callback) override;
   void GetOneTimeTips(ledger::PublisherInfoListCallback callback) override;
   std::unique_ptr<ledger::LogStream> Log(const char* file,

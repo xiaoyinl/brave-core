@@ -132,7 +132,7 @@ class Contribution {
   // In this step we get balance from the server
   void InitReconcile(
       const std::string &viewing_id,
-      const ledger::REWARDS_CATEGORY category,
+      const ledger::REWARDS_TYPE type,
       const braveledger_bat_helper::PublisherList& list,
       const braveledger_bat_helper::Directions& directions = {},
       double budget = 0);
@@ -146,7 +146,7 @@ class Contribution {
   // Does final stage in contribution
   // Sets reports and contribution info
   void OnReconcileCompleteSuccess(const std::string& viewing_id,
-                                  ledger::REWARDS_CATEGORY category,
+                                  ledger::REWARDS_TYPE type,
                                   const std::string& probi,
                                   ledger::ACTIVITY_MONTH month,
                                   int year,
@@ -194,13 +194,13 @@ class Contribution {
       double* budget);
 
   // Entry point for contribution where we have publisher info list
-  void ReconcilePublisherList(ledger::REWARDS_CATEGORY category,
+  void ReconcilePublisherList(ledger::REWARDS_TYPE type,
                               ledger::PublisherInfoList list,
                               uint32_t next_record);
 
   void OnBalanceForReconcile(
       const std::string& viewing_id,
-      const ledger::REWARDS_CATEGORY category,
+      const ledger::REWARDS_TYPE type,
       const braveledger_bat_helper::PublisherList& list,
       const braveledger_bat_helper::Directions& directions,
       double budget,

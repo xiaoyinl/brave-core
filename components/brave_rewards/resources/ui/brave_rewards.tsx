@@ -159,8 +159,8 @@ window.cr.define('brave_rewards', function () {
     getActions().onRecurringTipRemoved(success)
   }
 
-  function onContributionSaved (properties: Rewards.ContributionSaved) {
-    getActions().onContributionSaved(properties)
+  function onTransactionSaved (properties: Rewards.TransactionSaved) {
+    getActions().onTransactionSaved(properties)
   }
 
   function pendingContributions (list: Rewards.PendingContribution[]) {
@@ -219,7 +219,7 @@ window.cr.define('brave_rewards', function () {
     transactionHistoryChanged,
     recurringTipSaved,
     recurringTipRemoved,
-    onContributionSaved,
+    onTransactionSaved,
     onRemovePendingContribution,
     excludedSiteChanged,
     balance,

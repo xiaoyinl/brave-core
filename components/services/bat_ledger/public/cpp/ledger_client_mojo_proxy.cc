@@ -24,8 +24,8 @@ ledger::Result ToLedgerResult(int32_t result) {
   return (ledger::Result)result;
 }
 
-ledger::REWARDS_CATEGORY ToLedgerPublisherCategory(int32_t category) {
-  return (ledger::REWARDS_CATEGORY)category;
+ledger::REWARDS_TYPE ToLedgerPublisherType(int32_t type) {
+  return (ledger::REWARDS_TYPE)type;
 }
 
 ledger::URL_METHOD ToLedgerURLMethod(int32_t method) {
@@ -230,10 +230,10 @@ void LedgerClientMojoProxy::OnRecoverWallet(
 
 void LedgerClientMojoProxy::OnReconcileComplete(int32_t result,
     const std::string& viewing_id,
-    int32_t category,
+    int32_t type,
     const std::string& probi) {
   ledger_client_->OnReconcileComplete(ToLedgerResult(result), viewing_id,
-      ToLedgerPublisherCategory(category), probi);
+      ToLedgerPublisherType(type), probi);
 }
 
 void LedgerClientMojoProxy::OnGrantFinish(int32_t result,
@@ -427,11 +427,15 @@ void LedgerClientMojoProxy::OnRemoveRecurring(const std::string& publisher_key,
       std::bind(LedgerClientMojoProxy::OnRecurringRemoved, holder, _1));
 }
 
-void LedgerClientMojoProxy::SaveContributionInfo(const std::string& probi,
-    int32_t month, int32_t year, uint32_t date,
-    const std::string& publisher_key, int32_t category) {
-  ledger_client_->SaveContributionInfo(probi, month, year, date, publisher_key,
-      ToLedgerPublisherCategory(category));
+void LedgerClientMojoProxy::SaveTransactionInfo(
+    const std::string& id,
+    const int32_t type,
+    const double amount,
+    const std::string& probi,
+    const uint32_t created_date,
+    const uint32_t reconciled_date) {
+  ledger_client_->SaveTransactionInfo(id, ToLedgerPublisherType(type), amount,
+      probi, created_date, reconciled_date);
 }
 
 void LedgerClientMojoProxy::SaveMediaPublisherInfo(

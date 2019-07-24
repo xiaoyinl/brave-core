@@ -226,17 +226,15 @@ WriteToDataControllerCompletion(BATLedgerDatabaseWriteCompletion _Nullable compl
 
 #pragma mark - Contribution Info
 
-+ (void)insertContributionInfo:(NSString *)probi month:(const int)month year:(const int)year date:(const uint32_t)date publisherKey:(NSString *)publisherKey category:(BATRewardsCategory)category completion:(nullable BATLedgerDatabaseWriteCompletion)completion
++ (void)insertContributionInfo:(NSString *)probi month:(const int)month year:(const int)year date:(const uint32_t)date publisherKey:(NSString *)publisherKey category:(BATRewardsType)type completion:(nullable BATLedgerDatabaseWriteCompletion)completion
 {
   [DataController.shared performOnContext:nil task:^(NSManagedObjectContext * _Nonnull context) {
-    auto ci = [[ContributionInfo alloc] initWithEntity:[NSEntityDescription entityForName:NSStringFromClass(ContributionInfo.class) inManagedObjectContext:context]
+    auto ci = [[TransactionInfo alloc] initWithEntity:[NSEntityDescription entityForName:NSStringFromClass(TransactionInfo.class) inManagedObjectContext:context]
                         insertIntoManagedObjectContext:context];
     ci.probi = probi;
-    ci.month = month;
-    ci.year = year;
     ci.date = date;
     ci.publisherID = publisherKey;
-    ci.category = category;
+    ci.type = type;
     ci.publisher = [self getPublisherInfoWithID:publisherKey context:context];
   } completion:WriteToDataControllerCompletion(completion)];
 }
@@ -248,7 +246,7 @@ WriteToDataControllerCompletion(BATLedgerDatabaseWriteCompletion _Nullable compl
   fetchRequest.entity = [NSEntityDescription entityForName:NSStringFromClass(ContributionInfo.class)
                                     inManagedObjectContext:context];
   fetchRequest.predicate = [NSPredicate predicateWithFormat:@"month = %d AND year = %d AND category = %d",
-                            month, year, BATRewardsCategoryOneTimeTip];
+                            month, year, BATRewardsTypeOneTimeTip];
 
   NSError *error;
   const auto fetchedObjects = [context executeFetchRequest:fetchRequest error:&error];

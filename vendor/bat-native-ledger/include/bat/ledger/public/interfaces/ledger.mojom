@@ -3,7 +3,7 @@
 // You can obtain one at http://mozilla.org/MPL/2.0/.
 module ledger.mojom;
 
-struct ContributionInfo {
+struct TransactionInfo {
   string publisher;  // Filled only for recurrent tips
   double value;
   uint64 date;
@@ -17,7 +17,7 @@ struct PublisherInfo {
   uint32 percent;
   double weight;
   int32 excluded;
-  int32 category;
+  int32 type;
   uint64 reconcile_stamp;
   bool verified;
   string name;
@@ -25,7 +25,7 @@ struct PublisherInfo {
   string provider;
   string favicon_url;
 
-  array<ContributionInfo> contributions;
+  array<TransactionInfo> transactions;
 };
 
 struct PublisherBanner {
@@ -46,12 +46,12 @@ struct PendingContribution {
   double amount;
   uint64 added_date;
   string viewing_id;
-  int32 category;
+  int32 type;
 };
 
 struct PendingContributionInfo {
   string publisher_key;
-  int32 category;
+  int32 type;
   bool verified;
   string name;
   string url;
@@ -109,4 +109,12 @@ struct MediaEventInfo {
   string event;
   string time;
   string status;
+};
+
+struct TransactionState {
+  string transaction_id;
+  string anonize_viewing_id;
+  string surveyor_id;
+  string registrar_vk;
+  string master_user_token;
 };

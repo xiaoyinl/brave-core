@@ -933,20 +933,20 @@ void RewardsServiceImpl::OnGrantFinish(ledger::Result result,
 }
 
 void RewardsServiceImpl::OnReconcileComplete(ledger::Result result,
-  const std::string& viewing_id,
-  ledger::REWARDS_CATEGORY category,
-  const std::string& probi) {
+    const std::string& viewing_id,
+    ledger::REWARDS_TYPE type,
+    const std::string& probi) {
   if (result == ledger::Result::LEDGER_OK) {
     auto now = base::Time::Now();
     if (!Connected())
       return;
 
-    if (category == ledger::REWARDS_CATEGORY::RECURRING_TIP) {
+    if (type == ledger::REWARDS_TYPE::RECURRING_TIP) {
       MaybeShowNotificationTipsPaid();
     }
 
     bat_ledger_->OnReconcileCompleteSuccess(viewing_id,
-        category,
+        type,
         probi,
         GetPublisherMonth(now),
         GetPublisherYear(now),
@@ -954,12 +954,9 @@ void RewardsServiceImpl::OnReconcileComplete(ledger::Result result,
   }
 
   GetCurrentBalanceReport();
-  for (auto& observer : observers_)
-    observer.OnReconcileComplete(this,
-                                 result,
-                                 viewing_id,
-                                 category,
-                                 probi);
+  for (auto& observer : observers_) {
+    observer.OnReconcileComplete(this, result, viewing_id, type, probi);
+  }
 }
 
 void RewardsServiceImpl::LoadLedgerState(
@@ -1578,7 +1575,7 @@ void RewardsServiceImpl::GetTransactionHistory(
 void RewardsServiceImpl::OnGetTransactionHistory(
     GetTransactionHistoryCallback callback,
     const std::string& transactions) {
-  ledger::TransactionsInfo info;
+  ledger_ads::TransactionsInfo info;
   info.FromJson(transactions);
 
   std::move(callback).Run(info.estimated_pending_rewards,
@@ -2181,49 +2178,48 @@ void RewardsServiceImpl::OnTip(const std::string& publisher_key,
   bat_ledger_->DoDirectTip(publisher_key, amount, "BAT");
 }
 
-bool SaveContributionInfoOnFileTaskRunner(
-    const brave_rewards::ContributionInfo info,
-  PublisherInfoDatabase* backend) {
-  if (backend && backend->InsertContributionInfo(info))
+bool SaveTransactionInfoOnFileTaskRunner(
+    const TransactionInfo info,
+    PublisherInfoDatabase* backend) {
+  if (backend && backend->InsertOrUpdateTransactionInfo(info))
     return true;
 
   return false;
 }
 
-void RewardsServiceImpl::OnContributionInfoSaved(
-    const ledger::REWARDS_CATEGORY category,
+void RewardsServiceImpl::OnTransactionInfoSaved(
+    const ledger::REWARDS_TYPE type,
     bool success) {
   for (auto& observer : observers_) {
-    observer.OnContributionSaved(this, success, category);
+    observer.OnTransactionSaved(this, success, type);
   }
 }
 
-void RewardsServiceImpl::SaveContributionInfo(const std::string& probi,
-  const int month,
-  const int year,
-  const uint32_t date,
-  const std::string& publisher_key,
-  const ledger::REWARDS_CATEGORY category) {
-  brave_rewards::ContributionInfo info;
+void RewardsServiceImpl::SaveTransactionInfo(
+    const std::string& id,
+    const ledger::REWARDS_TYPE type,
+    const double amount,
+    const std::string& probi,
+    const uint32_t created_date,
+    const uint32_t reconciled_date) {
+  TransactionInfo info;
+  info.id = id;
+  info.type = type;
+  info.amount = amount;
   info.probi = probi;
-  info.month = month;
-  info.year = year;
-  info.date = date;
-  info.publisher_key = publisher_key;
-  info.category = category;
+  info.created_date = created_date;
+  info.reconciled_date = reconciled_date;
 
   base::PostTaskAndReplyWithResult(file_task_runner_.get(), FROM_HERE,
-      base::Bind(&SaveContributionInfoOnFileTaskRunner,
-                    info,
-                    publisher_info_backend_.get()),
-      base::Bind(&RewardsServiceImpl::OnContributionInfoSaved,
-                     AsWeakPtr(),
-                     category));
+      base::Bind(&SaveTransactionInfoOnFileTaskRunner, info,
+          publisher_info_backend_.get()),
+      base::Bind(&RewardsServiceImpl::OnTransactionInfoSaved,
+          AsWeakPtr(), type));
 }
 
 bool SaveRecurringTipOnFileTaskRunner(
     const brave_rewards::RecurringDonation info,
-  PublisherInfoDatabase* backend) {
+    PublisherInfoDatabase* backend) {
   if (backend && backend->InsertOrUpdateRecurringTip(info))
     return true;
 
@@ -3045,7 +3041,7 @@ PendingContributionInfo PendingContributionLedgerToRewards(
     const ledger::PendingContributionInfoPtr contribution) {
   PendingContributionInfo info;
   info.publisher_key = contribution->publisher_key;
-  info.category = contribution->category;
+  info.type = contribution->type;
   info.verified = contribution->verified;
   info.name = contribution->name;
   info.url = contribution->url;

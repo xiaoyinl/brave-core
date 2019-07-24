@@ -687,17 +687,17 @@ uint64_t LedgerImpl::GetReconcileStamp() const {
 void LedgerImpl::OnReconcileComplete(ledger::Result result,
                                      const std::string& viewing_id,
                                      const std::string& probi,
-                                     int32_t category) {
+                                     int32_t type) {
   auto reconcile = GetReconcileById(viewing_id);
 
-  if (category == 0) {
-    category = reconcile.category_;
+  if (type == 0) {
+    type = reconcile.type_;
   }
 
   ledger_client_->OnReconcileComplete(
       result,
       viewing_id,
-      static_cast<ledger::REWARDS_CATEGORY>(category),
+      static_cast<ledger::REWARDS_TYPE>(type),
       probi);
 }
 
@@ -850,8 +850,8 @@ void LedgerImpl::DoDirectTip(const std::string& publisher_id,
   if (!is_verified) {
     auto contribution = ledger::PendingContribution::New();
     contribution->publisher_key = publisher_id;
+    contribution->type = ledger::REWARDS_TYPE::ONE_TIME_TIP;
     contribution->amount = amount;
-    contribution->category = ledger::REWARDS_CATEGORY::ONE_TIME_TIP;
 
     ledger::PendingContributionList list;
     list.push_back(std::move(contribution));
@@ -868,7 +868,7 @@ void LedgerImpl::DoDirectTip(const std::string& publisher_id,
       std::vector<braveledger_bat_helper::RECONCILE_DIRECTION> { direction };
   braveledger_bat_helper::PublisherList list;
   bat_contribution_->InitReconcile(GenerateGUID(),
-                         ledger::REWARDS_CATEGORY::ONE_TIME_TIP,
+                         ledger::REWARDS_TYPE::ONE_TIME_TIP,
                          list,
                          direction_list);
 }
@@ -1093,13 +1093,13 @@ void LedgerImpl::GetPublisherBanner(const std::string& publisher_id,
 
 void LedgerImpl::OnReconcileCompleteSuccess(
     const std::string& viewing_id,
-    const ledger::REWARDS_CATEGORY category,
+    const ledger::REWARDS_TYPE type,
     const std::string& probi,
     const ledger::ACTIVITY_MONTH month,
     const int year,
     const uint32_t date) {
   bat_contribution_->OnReconcileCompleteSuccess(viewing_id,
-                                                category,
+                                                type,
                                                 probi,
                                                 month,
                                                 year,
@@ -1392,19 +1392,15 @@ bool LedgerImpl::ReconcileExists(const std::string& viewingId) {
   return bat_state_->ReconcileExists(viewingId);
 }
 
-void LedgerImpl::SaveContributionInfo(
+void LedgerImpl::SaveTransactionInfo(
+    const std::string& id,
+    const ledger::REWARDS_TYPE type,
+    const double amount,
     const std::string& probi,
-    const int month,
-    const int year,
-    const uint32_t date,
-    const std::string& publisher_key,
-    const ledger::REWARDS_CATEGORY category) {
-  ledger_client_->SaveContributionInfo(probi,
-                                       month,
-                                       year,
-                                       date,
-                                       publisher_key,
-                                       category);
+    const uint32_t created_date,
+    const uint32_t reconciled_date) {
+  ledger_client_->SaveTransactionInfo(id, type, amount, probi, created_date,
+      reconciled_date);
 }
 
 void LedgerImpl::NormalizeContributeWinners(

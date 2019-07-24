@@ -92,7 +92,7 @@ void NativeLedgerClient::OnGrantFinish(ledger::Result result, ledger::GrantPtr g
 void NativeLedgerClient::OnPanelPublisherInfo(ledger::Result result, ledger::PublisherInfoPtr publisher_info, uint64_t windowId) {
   [bridge_ onPanelPublisherInfo:result publisherInfo:std::move(publisher_info) windowId:windowId];
 }
-void NativeLedgerClient::OnReconcileComplete(ledger::Result result, const std::string & viewing_id, ledger::REWARDS_CATEGORY category, const std::string & probi) {
+void NativeLedgerClient::OnReconcileComplete(ledger::Result result, const std::string & viewing_id, ledger::REWARDS_TYPE type, const std::string & probi) {
   [bridge_ onReconcileComplete:result viewingId:viewing_id category:category probi:probi];
 }
 void NativeLedgerClient::OnRecoverWallet(ledger::Result result, double balance, std::vector<ledger::GrantPtr> grants) {
@@ -122,8 +122,8 @@ void NativeLedgerClient::ResetState(const std::string & name, ledger::OnResetCal
 void NativeLedgerClient::SaveActivityInfo(ledger::PublisherInfoPtr publisher_info, ledger::PublisherInfoCallback callback) {
   [bridge_ saveActivityInfo:std::move(publisher_info) callback:callback];
 }
-void NativeLedgerClient::SaveContributionInfo(const std::string & probi, const int month, const int year, const uint32_t date, const std::string & publisher_key, const ledger::REWARDS_CATEGORY category) {
-  [bridge_ saveContributionInfo:probi month:month year:year date:date publisherKey:publisher_key category:category];
+void NativeLedgerClient::SaveContributionInfo(const std::string & probi, const uint32_t date, const std::string & publisher_key, const ledger::REWARDS_TYPE type) {
+  [bridge_ saveContributionInfo:probi month:month year:year date:date publisherKey:publisher_key type:type];
 }
 void NativeLedgerClient::SaveLedgerState(const std::string & ledger_state, ledger::LedgerCallbackHandler * handler) {
   [bridge_ saveLedgerState:ledger_state handler:handler];

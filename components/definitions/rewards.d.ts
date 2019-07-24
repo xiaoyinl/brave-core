@@ -20,7 +20,7 @@ declare namespace Rewards {
     GRANT_NOT_FOUND = 13
   }
 
-  export enum RewardsCategory {
+  export enum RewardsType {
     AUTO_CONTRIBUTE = 2,
     ONE_TIME_TIP = 8,
     RECURRING_TIP = 16
@@ -183,7 +183,7 @@ declare namespace Rewards {
     RECURRING_TIP = 21
   }
 
-  export interface ContributionSaved {
+  export interface TransactionSaved {
     success: boolean
     category: Category
   }
@@ -198,7 +198,7 @@ declare namespace Rewards {
     favIcon: string
     amount: number
     addedDate: string
-    category: RewardsCategory
+    type: RewardsType
     viewingId: string
     expirationDate: string
   }

@@ -6,8 +6,11 @@
 #ifndef BRAVE_COMPONENTS_BRAVE_REWARDS_BROWSER_PUBLISHER_INFO_DATABASE_H_
 #define BRAVE_COMPONENTS_BRAVE_REWARDS_BROWSER_PUBLISHER_INFO_DATABASE_H_
 
+#include <stdint.h>
 #include <memory>
 #include <string>
+#include <vector>
+#include <map>
 #include <stddef.h>  // NOLINT
 
 #include "base/compiler_specific.h"
@@ -17,7 +20,7 @@
 #include "base/sequence_checker.h"
 #include "bat/ledger/publisher_info.h"
 #include "bat/ledger/pending_contribution.h"
-#include "brave/components/brave_rewards/browser/contribution_info.h"
+#include "brave/components/brave_rewards/browser/transaction_info.h"
 #include "brave/components/brave_rewards/browser/pending_contribution.h"
 #include "brave/components/brave_rewards/browser/recurring_donation.h"
 #include "build/build_config.h"
@@ -38,19 +41,38 @@ class PublisherInfoDatabase {
     db_.set_error_callback(error_callback);
   }
 
-  bool InsertContributionInfo(const brave_rewards::ContributionInfo& info);
+  bool InsertOrUpdateTransactionInfo(
+      const TransactionInfo& info);
 
   void GetOneTimeTips(ledger::PublisherInfoList* list,
                       ledger::ACTIVITY_MONTH month,
                       int year);
 
+  bool InsertOrUpdateBallot(
+      const std::string& transaction_id,
+      const std::string& publisher_key,
+      const int votes);
+
+  bool GetBallots(
+    const std::string& transaction_id,
+    std::map<std::string, int>* ballots);
+
+  bool InsertOrUpdateExchangeRate(
+      const std::string& transaction_id,
+      const std::string& currency_code,
+      const double rate);
+
+  bool GetExchangeRates(
+      const std::string& transaction_id,
+      std::map<std::string, double>* exchange_rates);
+
   bool InsertOrUpdatePublisherInfo(const ledger::PublisherInfo& info);
 
   ledger::PublisherInfoPtr GetPublisherInfo(
-     const std::string& media_key);
+      const std::string& media_key);
 
   ledger::PublisherInfoPtr GetPanelPublisher(
-     const ledger::ActivityInfoFilter& filter);
+      const ledger::ActivityInfoFilter& filter);
 
   bool RestorePublishers();
 
@@ -114,24 +136,23 @@ class PublisherInfoDatabase {
   std::string GetSchema();
 
  private:
-  bool CreateContributionInfoTable();
-
-  bool CreateContributionInfoIndex();
-
   bool CreatePublisherInfoTable();
 
-  bool CreateActivityInfoTable();
+  bool CreateTransactionInfoTable();
+  bool CreateBallotsTable();
+  bool CreateExchangeRatesTable();
+  bool CreateTransactionStateTable();
+  bool CreateSurveyorIdsTable();
 
+  bool CreateActivityInfoTable();
   bool CreateActivityInfoIndex();
 
   bool CreateMediaPublisherInfoTable();
 
   bool CreateRecurringTipsTable();
-
   bool CreateRecurringTipsIndex();
 
   bool CreatePendingContributionsTable();
-
   bool CreatePendingContributionsIndex();
 
   void OnMemoryPressure(
@@ -149,9 +170,39 @@ class PublisherInfoDatabase {
 
   bool MigrateV5toV6();
 
+  bool MigrateV6toV7();
+  bool MigrateV6toV7_CreateTransactionInfoTable();
+  bool MigrateV6toV7_CreateTransactionInfoIndex();
+  bool MigrateV6toV7_TransactionInfoTable();
+  bool MigrateV6toV7_PendingContributionsTable();
+
   bool Migrate(int version);
 
   sql::InitStatus EnsureCurrentVersion();
+
+  bool MigrateDBTable(
+      const std::string& from,
+      const std::string& to,
+      const std::vector<std::string>& columns,
+      const bool should_drop);
+
+  bool MigrateDBTable(
+      const std::string& from,
+      const std::string& to,
+      const std::map<std::string, std::string>& columns,
+      const bool should_drop);
+
+  bool RenameDBTable(
+      const std::string& from,
+      const std::string& to);
+
+  std::string CreateDBInsertQuery(
+      const std::string& from,
+      const std::string& to,
+      const std::map<std::string, std::string>& columns);
+
+  std::string CommaSeparateVector(
+      const std::vector<std::string>& vector);
 
   sql::Database db_;
   sql::MetaTable meta_table_;

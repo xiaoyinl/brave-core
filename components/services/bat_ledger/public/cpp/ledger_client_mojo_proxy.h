@@ -6,6 +6,7 @@
 #ifndef BRAVE_COMPONENTS_SERVICES_BAT_LEDGER_PUBLIC_CPP_LEDGER_CLIENT_MOJO_PROXY_H_
 #define BRAVE_COMPONENTS_SERVICES_BAT_LEDGER_PUBLIC_CPP_LEDGER_CLIENT_MOJO_PROXY_H_
 
+#include <stdint.h>
 #include <map>
 #include <memory>
 #include <string>
@@ -36,8 +37,11 @@ class LedgerClientMojoProxy : public mojom::BatLedgerClient,
       const std::string& hint) override;
   void OnRecoverWallet(int32_t result, double balance,
       std::vector<ledger::GrantPtr> grants) override;
-  void OnReconcileComplete(int32_t result, const std::string& viewing_id,
-      int32_t category, const std::string& probi) override;
+  void OnReconcileComplete(
+      int32_t result,
+      const std::string& viewing_id,
+      int32_t type,
+      const std::string& probi) override;
   void OnGrantFinish(int32_t result, ledger::GrantPtr grant) override;
 
   void LoadPublisherState(LoadPublisherStateCallback callback) override;
@@ -75,9 +79,15 @@ class LedgerClientMojoProxy : public mojom::BatLedgerClient,
                             uint64_t window_id) override;
   void OnExcludedSitesChanged(const std::string& publisher_id,
                               int exclude) override;
-  void SaveContributionInfo(const std::string& probi, int32_t month,
-      int32_t year, uint32_t date, const std::string& publisher_key,
-      int32_t category) override;
+
+  void SaveTransactionInfo(
+      const std::string& id,
+      const int32_t type,
+      const double amount,
+      const std::string& probi,
+      const uint32_t created_date,
+      const uint32_t reconciled_date) override;
+
   void SaveMediaPublisherInfo(const std::string& media_key,
       const std::string& publisher_id) override;
   void FetchGrants(const std::string& lang,

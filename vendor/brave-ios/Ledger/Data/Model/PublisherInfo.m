@@ -18,7 +18,7 @@
 @dynamic url;
 @dynamic verified;
 @dynamic activities;
-@dynamic contributions;
+@dynamic transactions;
 @dynamic recurringDonations;
 @dynamic pendingContributions;
 

@@ -29,7 +29,7 @@
 #include "mojo/public/cpp/bindings/associated_binding.h"
 #include "brave/components/brave_rewards/browser/balance_report.h"
 #include "brave/components/brave_rewards/browser/content_site.h"
-#include "brave/components/brave_rewards/browser/contribution_info.h"
+#include "brave/components/brave_rewards/browser/transaction_info.h"
 #include "ui/gfx/image/image.h"
 #include "brave/components/brave_rewards/browser/publisher_banner.h"
 #include "brave/components/brave_rewards/browser/rewards_service_private_observer.h"
@@ -314,8 +314,9 @@ class RewardsServiceImpl : public RewardsService,
              int amount,
              bool recurring,
              ledger::PublisherInfoPtr publisher_info);
-  void OnContributionInfoSaved(const ledger::REWARDS_CATEGORY category,
-                               bool success);
+  void OnTransactionInfoSaved(
+      const ledger::REWARDS_TYPE type,
+      bool success);
   void OnRecurringTipSaved(bool success);
   void OnGetRecurringTips(
       const ledger::PublisherInfoListCallback callback,
@@ -412,7 +413,7 @@ class RewardsServiceImpl : public RewardsService,
                       std::vector<ledger::GrantPtr> grants) override;
   void OnReconcileComplete(ledger::Result result,
                            const std::string& viewing_id,
-                           ledger::REWARDS_CATEGORY category,
+                           ledger::REWARDS_TYPE type,
                            const std::string& probi) override;
   void OnGrantFinish(ledger::Result result,
                      ledger::GrantPtr grant) override;
@@ -475,12 +476,15 @@ class RewardsServiceImpl : public RewardsService,
   void OnSetOnDemandFaviconComplete(const std::string& favicon_url,
                                     ledger::FetchIconCallback callback,
                                     bool success);
-  void SaveContributionInfo(const std::string& probi,
-                            const int month,
-                            const int year,
-                            const uint32_t date,
-                            const std::string& publisher_key,
-                            const ledger::REWARDS_CATEGORY category) override;
+
+  void SaveTransactionInfo(
+      const std::string& id,
+      const ledger::REWARDS_TYPE type,
+      const double amount,
+      const std::string& probi,
+      const uint32_t created_date,
+      const uint32_t reconciled_date) override;
+
   void GetRecurringTips(
       ledger::PublisherInfoListCallback callback) override;
   std::unique_ptr<ledger::LogStream> Log(

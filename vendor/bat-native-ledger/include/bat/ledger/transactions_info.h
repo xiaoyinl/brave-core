@@ -13,7 +13,7 @@
 #include "bat/ledger/export.h"
 #include "bat/ledger/transaction_info.h"
 
-namespace ledger {
+namespace ledger_ads {
 
 LEDGER_EXPORT struct TransactionsInfo {
   TransactionsInfo();
@@ -43,6 +43,6 @@ LEDGER_EXPORT struct TransactionsInfo {
     base::DictionaryValue* dictionary) const;
 };
 
-}  // namespace ledger
+}  // namespace ledger_ads
 
 #endif  // BAT_LEDGER_TRANSACTIONS_INFO_

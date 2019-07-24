@@ -11,7 +11,7 @@
 #import <CoreData/CoreData.h>
 
 #import "ActivityInfo.h"
-#import "ContributionInfo.h"
+#import "TransactionInfo.h"
 #import "MediaPublisherInfo.h"
 #import "PendingContribution.h"
 #import "PublisherInfo.h"

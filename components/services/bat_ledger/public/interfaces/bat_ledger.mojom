@@ -60,7 +60,7 @@ interface BatLedger {
 
   SetBalanceReportItem(int32 month, int32 year, int32 type, string probi);
   OnReconcileCompleteSuccess(string viewing_id, int32 category, string probi,
-      int32 month, int32 year, uint32 data);
+      int32 month, int32 year, uint32 date);
 
   FetchGrants(string lang, string payment_id);
   GetGrantCaptcha(array<string> headers);
@@ -202,8 +202,8 @@ interface BatLedgerClient {
   SetTimer(uint64 time_offset) => (uint32 timer_id);
   KillTimer(uint32 timer_id);
   OnExcludedSitesChanged(string publisher_id, int32 exclude);
-  SaveContributionInfo(string probi, int32 month, int32 year, uint32 date,
-      string publisher_key, int32 category);
+  SaveTransactionInfo(string id, int32 type, double amount, string probi,
+      uint32 created_date, uint32 reconciled_date);
   SaveMediaPublisherInfo(string media_key, string publisher_id);
   FetchGrants(string lang, string payment_id);
 
