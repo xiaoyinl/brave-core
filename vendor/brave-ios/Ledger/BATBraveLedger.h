@@ -183,7 +183,7 @@ NS_SWIFT_NAME(BraveLedger)
 
 - (void)solveGrantCaptchWithPromotionId:(NSString *)promotionId
                                solution:(NSString *)solution
-                             completion:(void (^)(BATResult result, BATGrant * _Nulable grant))completion;
+                             completion:(void (^)(BATResult result, BATGrant * _Nullable grant))completion;
 
 #pragma mark - History
 

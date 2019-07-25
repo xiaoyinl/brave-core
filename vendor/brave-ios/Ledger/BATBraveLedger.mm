@@ -572,37 +572,36 @@ BATLedgerReadonlyBridge(double, defaultContributionAmount, GetDefaultContributio
       });
 }
 
-- (void)solveGrantCaptchWithPromotionId:(NSString *)promotionId solution:(NSString *)solution completion:(void (^)(BATResult result, ledger::GrantPtr grant))completion
+- (void)solveGrantCaptchWithPromotionId:(NSString *)promotionId solution:(NSString *)solution completion:(void (^)(BATResult, BATGrant * _Nullable))completion
 {
   ledger->SolveGrantCaptcha(std::string(solution.UTF8String),
   std::string(promotionId.UTF8String), ^(ledger::Result result, ledger::GrantPtr grant) {
-    // To be implemented
+    ledger::BalanceReportInfo report_info;
+    auto now = [NSDate date];
+    const auto bridgedGrant = grant.get() != nullptr ? [[BATGrant alloc] initWithGrant:*grant] : nil;
+    if (result == ledger::LEDGER_OK) {
+      ledger::ReportType report_type = grant->type == "ads" ? ledger::ADS : ledger::GRANT;
+      ledger->SetBalanceReportItem(BATGetPublisherMonth(now),
+                                   BATGetPublisherYear(now),
+                                   report_type,
+                                   grant->probi);
+    }
+    
+    [self clearNotificationWithID:[self notificationIDForGrant:std::move(grant)]];
+    
+    if (result == ledger::LEDGER_OK) {
+      for (BATBraveLedgerObserver *observer in self.observers) {
+        if (observer.balanceReportUpdated) {
+          observer.balanceReportUpdated();
+        }
+        if (observer.grantClaimed) {
+          observer.grantClaimed(bridgedGrant);
+        }
+      }
+    }
+    
+    completion(static_cast<BATResult>(result), bridgedGrant);
   });
-}
-
-- (void)onGrantFinish:(ledger::Result)result grant:(ledger::GrantPtr)grant
-{
-  ledger::BalanceReportInfo report_info;
-  auto now = [NSDate date];
-  const auto bridgedGrant = [[BATGrant alloc] initWithGrant:*grant];
-  if (result == ledger::LEDGER_OK) {
-    ledger::ReportType report_type = grant->type == "ads" ? ledger::ADS : ledger::GRANT;
-    ledger->SetBalanceReportItem(BATGetPublisherMonth(now),
-                                 BATGetPublisherYear(now),
-                                 report_type,
-                                 grant->probi);
-  }
-
-  [self clearNotificationWithID:[self notificationIDForGrant:std::move(grant)]];
-
-  for (BATBraveLedgerObserver *observer in self.observers) {
-    if (observer.balanceReportUpdated) {
-      observer.balanceReportUpdated();
-    }
-    if (observer.grantClaimed) {
-      observer.grantClaimed(bridgedGrant);
-    }
-  }
 }
 
 #pragma mark - History
