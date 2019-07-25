@@ -71,8 +71,14 @@ void NativeLedgerClient::LoadURL(const std::string & url, const std::vector<std:
 std::unique_ptr<ledger::LogStream> NativeLedgerClient::Log(const char * file, int line, const ledger::LogLevel log_level) const {
   return [bridge_ log:file line:line logLevel:log_level];
 }
-void NativeLedgerClient::OnGrantFinish(ledger::Result result, ledger::GrantPtr grant) {
-  [bridge_ onGrantFinish:result grant:std::move(grant)];
+void NativeLedgerClient::OnExcludedSitesChanged(const std::string & publisher_id, ledger::PUBLISHER_EXCLUDE exclude) {
+  [bridge_ onExcludedSitesChanged:publisher_id exclude:exclude];
+}
+void NativeLedgerClient::OnGrant(ledger::Result result, ledger::GrantPtr grant) {
+  [bridge_ onGrant:result grant:std::move(grant)];
+}
+void NativeLedgerClient::OnGrantCaptcha(const std::string & image, const std::string & hint) {
+  [bridge_ onGrantCaptcha:image hint:hint];
 }
 void NativeLedgerClient::OnPanelPublisherInfo(ledger::Result result, ledger::PublisherInfoPtr publisher_info, uint64_t windowId) {
   [bridge_ onPanelPublisherInfo:result publisherInfo:std::move(publisher_info) windowId:windowId];

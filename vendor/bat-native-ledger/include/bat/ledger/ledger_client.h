@@ -140,9 +140,6 @@ class LEDGER_EXPORT LedgerClient {
                                double balance,
                                std::vector<ledger::GrantPtr> grants) = 0;
 
-  virtual void OnGrantFinish(ledger::Result result,
-                             ledger::GrantPtr grant) = 0;
-
   virtual void OnPanelPublisherInfo(Result result,
                                    ledger::PublisherInfoPtr publisher_info,
                                    uint64_t windowId) = 0;

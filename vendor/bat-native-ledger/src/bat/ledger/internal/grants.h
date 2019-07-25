@@ -30,8 +30,10 @@ class Grants {
       const std::string& forPaymentId,
       ledger::FetchGrantsCallback callback);
 
-  void SetGrant(const std::string& captchaResponse,
-                const std::string& promotionId);
+  void SolveGrantCaptcha(
+      const std::string& captchaResponse,
+      const std::string& promotionId,
+      ledger::SolveGrantCaptchaCallback callback);
 
   void GetGrantCaptcha(const std::vector<std::string>& headers,
                        ledger::GetGrantCaptchaCallback callback);
@@ -49,10 +51,11 @@ class Grants {
       const std::map<std::string, std::string>& headers,
       ledger::FetchGrantsCallback callback);
 
-  void SetGrantCallback(
+  void OnSolveGrantCaptcha(
       int response_status_code,
       const std::string& response,
-      const std::map<std::string, std::string>& headers);
+      const std::map<std::string, std::string>& headers,
+      ledger::SolveGrantCaptchaCallback callback);
 
   bat_ledger::LedgerImpl* ledger_;  // NOT OWNED
 };

@@ -60,6 +60,8 @@ using FetchGrantsCallback =
 using SetPublisherExcludeCallback = std::function<void(ledger::Result)>;
 using GetGrantCaptchaCallback = std::function<void(const std::string&,
                                                    const std::string&)>;
+using SolveGrantCaptchaCallback =
+    std::function<void(ledger::Result, ledger::GrantPtr)>;
 
 class LEDGER_EXPORT Ledger {
  public:
@@ -167,8 +169,10 @@ class LEDGER_EXPORT Ledger {
                            const std::string& paymentId,
                            ledger::FetchGrantsCallback callback) const = 0;
 
-  virtual void SolveGrantCaptcha(const std::string& solution,
-                                 const std::string& promotionId) const = 0;
+  virtual void SolveGrantCaptcha(
+      const std::string& solution,
+      const std::string& promotionId,
+      ledger::SolveGrantCaptchaCallback callback) = 0;
 
   virtual void GetGrantCaptcha(
       const std::vector<std::string>& headers,

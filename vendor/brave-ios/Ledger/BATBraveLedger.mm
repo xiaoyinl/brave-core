@@ -572,10 +572,12 @@ BATLedgerReadonlyBridge(double, defaultContributionAmount, GetDefaultContributio
       });
 }
 
-- (void)solveGrantCaptchWithPromotionId:(NSString *)promotionId solution:(NSString *)solution
+- (void)solveGrantCaptchWithPromotionId:(NSString *)promotionId solution:(NSString *)solution completion:(void (^)(BATResult result, ledger::GrantPtr grant))completion
 {
   ledger->SolveGrantCaptcha(std::string(solution.UTF8String),
-                            std::string(promotionId.UTF8String));
+  std::string(promotionId.UTF8String), ^(ledger::Result result, ledger::GrantPtr grant) {
+    // To be implemented
+  });
 }
 
 - (void)onGrantFinish:(ledger::Result)result grant:(ledger::GrantPtr)grant

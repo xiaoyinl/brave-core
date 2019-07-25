@@ -39,8 +39,6 @@ class BatLedgerClientMojoProxy : public ledger::LedgerClient,
                            const std::string& viewing_id,
                            ledger::REWARDS_CATEGORY category,
                            const std::string& probi) override;
-  void OnGrantFinish(ledger::Result result,
-                     ledger::GrantPtr grant) override;
   void LoadLedgerState(ledger::OnLoadCallback callback) override;
   void LoadPublisherState(ledger::OnLoadCallback callback) override;
   void SaveLedgerState(const std::string& ledger_state,

@@ -123,11 +123,11 @@ void Grants::GetGrantsCallback(
   ledger_->SetGrants(grants);
 }
 
-void Grants::SetGrant(const std::string& captchaResponse,
-                      const std::string& promotionId) {
+void Grants::SolveGrantCaptcha(const std::string& captchaResponse,
+                               const std::string& promotionId,
+                               ledger::SolveGrantCaptchaCallback callback) {
   if (promotionId.empty()) {
-    braveledger_bat_helper::GRANT properties;
-    ledger_->OnGrantFinish(ledger::Result::LEDGER_ERROR, properties);
+    callback(ledger::Result::LEDGER_ERROR, nullptr);
     return;
   }
 
@@ -135,42 +135,44 @@ void Grants::SetGrant(const std::string& captchaResponse,
   std::string values[2] = {promotionId, captchaResponse};
   std::string payload = braveledger_bat_helper::stringify(keys, values, 2);
 
-  auto callback = std::bind(&Grants::SetGrantCallback, this, _1, _2, _3);
+  auto internal_callback = std::bind(&Grants::OnSolveGrantCaptcha, this, _1, _2,
+                                     _3, std::move(callback));
   ledger_->LoadURL(braveledger_bat_helper::buildURL(
         (std::string)GET_SET_PROMOTION + "/" + ledger_->GetPaymentId(),
         PREFIX_V2),
       std::vector<std::string>(), payload, "application/json; charset=utf-8",
-      ledger::URL_METHOD::PUT, callback);
+      ledger::URL_METHOD::PUT, internal_callback);
 }
 
-void Grants::SetGrantCallback(
+void Grants::OnSolveGrantCaptcha(
     int response_status_code,
     const std::string& response,
-    const std::map<std::string, std::string>& headers) {
+    const std::map<std::string, std::string>& headers,
+    ledger::SolveGrantCaptchaCallback callback) {
   std::string error;
   unsigned int statusCode;
-  braveledger_bat_helper::GRANT grant;
   braveledger_bat_helper::getJSONResponse(response, &statusCode, &error);
 
   ledger_->LogResponse(__func__, response_status_code, response, headers);
 
   if (!error.empty()) {
     if (statusCode == net::HTTP_FORBIDDEN) {
-      ledger_->OnGrantFinish(ledger::Result::CAPTCHA_FAILED, grant);
+      callback(ledger::Result::CAPTCHA_FAILED, nullptr);
     } else if (statusCode == net::HTTP_NOT_FOUND ||
                statusCode == net::HTTP_GONE) {
-      ledger_->OnGrantFinish(ledger::Result::GRANT_NOT_FOUND, grant);
+      callback(ledger::Result::GRANT_NOT_FOUND, nullptr);
     } else if (statusCode == net::HTTP_CONFLICT) {
-      ledger_->OnGrantFinish(ledger::Result::GRANT_ALREADY_CLAIMED, grant);
+      callback(ledger::Result::GRANT_ALREADY_CLAIMED, nullptr);
     } else {
-      ledger_->OnGrantFinish(ledger::Result::LEDGER_ERROR, grant);
+      callback(ledger::Result::LEDGER_ERROR, nullptr);
     }
     return;
   }
 
+  braveledger_bat_helper::GRANT grant;
   bool ok = braveledger_bat_helper::loadFromJson(&grant, response);
   if (!ok) {
-    ledger_->OnGrantFinish(ledger::Result::LEDGER_ERROR, grant);
+    callback(ledger::Result::LEDGER_ERROR, nullptr);
     return;
   }
 
@@ -180,7 +182,15 @@ void Grants::SetGrantCallback(
   for (auto state_grant : state_grants) {
     if (grant.type == state_grant.type) {
       grant.promotionId = state_grant.promotionId;
-      ledger_->OnGrantFinish(ledger::Result::LEDGER_OK, grant);
+
+      ledger::GrantPtr grant_copy = ledger::Grant::New();
+      grant_copy->altcurrency = grant.altcurrency;
+      grant_copy->probi = grant.probi;
+      grant_copy->expiry_time = grant.expiryTime;
+      grant_copy->promotion_id = grant.promotionId;
+      grant_copy->type = grant.type;
+
+      callback(ledger::Result::LEDGER_OK, std::move(grant_copy));
       updated_grants.push_back(grant);
     } else {
       updated_grants.push_back(state_grant);

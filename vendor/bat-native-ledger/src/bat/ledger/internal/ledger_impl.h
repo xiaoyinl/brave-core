@@ -201,11 +201,10 @@ class LedgerImpl : public ledger::Ledger,
       const std::vector<std::string>& headers,
       ledger::GetGrantCaptchaCallback callback) const override;
 
-  void SolveGrantCaptcha(const std::string& solution,
-                         const std::string& promotionId) const override;
-
-  void OnGrantFinish(ledger::Result result,
-                     const braveledger_bat_helper::GRANT& grant);
+  void SolveGrantCaptcha(
+      const std::string& solution,
+      const std::string& promotionId,
+      ledger::SolveGrantCaptchaCallback callback) override;
 
   std::string GetWalletPassphrase() const override;
 
@@ -597,6 +596,11 @@ class LedgerImpl : public ledger::Ledger,
       const std::map<std::string, std::string>& headers,
       const std::string& publisher_key,
       ledger::OnRefreshPublisherCallback callback);
+
+  void OnSolveGrantCaptcha(
+      const ledger::Result result,
+      ledger::GrantPtr grant,
+      ledger::SolveGrantCaptchaCallback callback);
 
   ledger::LedgerClient* ledger_client_;
   std::unique_ptr<braveledger_grant::Grants> bat_grants_;

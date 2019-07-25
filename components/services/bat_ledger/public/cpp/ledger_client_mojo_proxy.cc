@@ -229,11 +229,6 @@ void LedgerClientMojoProxy::OnReconcileComplete(int32_t result,
       ToLedgerPublisherCategory(category), probi);
 }
 
-void LedgerClientMojoProxy::OnGrantFinish(int32_t result,
-                                          ledger::GrantPtr grant) {
-  ledger_client_->OnGrantFinish(ToLedgerResult(result), std::move(grant));
-}
-
 // static
 void LedgerClientMojoProxy::OnSavePublisherInfo(
     CallbackHolder<SavePublisherInfoCallback>* holder,
