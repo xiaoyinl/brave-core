@@ -502,7 +502,7 @@ void PhaseOne::Complete(ledger::Result result,
                         int category,
                         const std::string& probi) {
   // Set timer to the next month when AC is complete
-  if (category == ledger::REWARDS_CATEGORY::AUTO_CONTRIBUTE) {
+  if (category == ledger::RewardsCategory::AUTO_CONTRIBUTE) {
     contribution_->ResetReconcileStamp();
   }
 

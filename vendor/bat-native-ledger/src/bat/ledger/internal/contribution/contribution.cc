@@ -199,7 +199,7 @@ ledger::PublisherInfoList Contribution::GetVerifiedListAuto(
     contribution->amount = (publisher->weight / 100) * ac_amount;
     contribution->publisher_key = publisher->id;
     contribution->viewing_id = "";
-    contribution->category = ledger::REWARDS_CATEGORY::AUTO_CONTRIBUTE;
+    contribution->category = ledger::RewardsCategory::AUTO_CONTRIBUTE;
 
 
     non_verified.push_back(std::move(contribution));
@@ -233,7 +233,7 @@ ledger::PublisherInfoList Contribution::GetVerifiedListRecurring(
       contribution->amount = publisher->weight;
       contribution->publisher_key = publisher->id;
       contribution->viewing_id = "";
-      contribution->category = ledger::REWARDS_CATEGORY::RECURRING_TIP;
+      contribution->category = ledger::RewardsCategory::RECURRING_TIP;
 
       non_verified.push_back(std::move(contribution));
     }
@@ -270,7 +270,7 @@ void Contribution::PrepareACList(
     new_list.push_back(new_publisher);
   }
 
-  InitReconcile(ledger::REWARDS_CATEGORY::AUTO_CONTRIBUTE,
+  InitReconcile(ledger::RewardsCategory::AUTO_CONTRIBUTE,
                 new_list,
                 {},
                 budget);
@@ -292,7 +292,7 @@ void Contribution::PrepareRecurringList(
     directions.push_back(direction);
   }
 
-  InitReconcile(ledger::REWARDS_CATEGORY::RECURRING_TIP,
+  InitReconcile(ledger::RewardsCategory::RECURRING_TIP,
                 {},
                 directions,
                 budget);
@@ -352,7 +352,7 @@ void Contribution::StartAutoContribute() {
 }
 
 void Contribution::OnBalanceForReconcile(
-    const ledger::REWARDS_CATEGORY category,
+    const ledger::RewardsCategory category,
     const braveledger_bat_helper::PublisherList& list,
     const braveledger_bat_helper::Directions& directions,
     double budget,
@@ -375,7 +375,7 @@ void Contribution::OnBalanceForReconcile(
 }
 
 void Contribution::InitReconcile(
-    const ledger::REWARDS_CATEGORY category,
+    const ledger::RewardsCategory category,
     const braveledger_bat_helper::PublisherList& list,
     const braveledger_bat_helper::Directions& directions,
     double budget) {
@@ -444,12 +444,12 @@ void Contribution::SetTimer(uint32_t* timer_id, uint64_t start_timer_in) {
 
 void Contribution::OnReconcileCompleteSuccess(
     const std::string& viewing_id,
-    ledger::REWARDS_CATEGORY category,
+    ledger::RewardsCategory category,
     const std::string& probi,
     ledger::ACTIVITY_MONTH month,
     int year,
     uint32_t date) {
-  if (category == ledger::REWARDS_CATEGORY::AUTO_CONTRIBUTE) {
+  if (category == ledger::RewardsCategory::AUTO_CONTRIBUTE) {
     ledger_->SetBalanceReportItem(month,
                                   year,
                                   ledger::ReportType::AUTO_CONTRIBUTION,
@@ -458,7 +458,7 @@ void Contribution::OnReconcileCompleteSuccess(
     return;
   }
 
-  if (category == ledger::REWARDS_CATEGORY::ONE_TIME_TIP) {
+  if (category == ledger::RewardsCategory::ONE_TIME_TIP) {
     ledger_->SetBalanceReportItem(month,
                                   year,
                                   ledger::ReportType::TIP,
@@ -477,7 +477,7 @@ void Contribution::OnReconcileCompleteSuccess(
     return;
   }
 
-  if (category == ledger::REWARDS_CATEGORY::RECURRING_TIP) {
+  if (category == ledger::RewardsCategory::RECURRING_TIP) {
     auto reconcile = ledger_->GetReconcileById(viewing_id);
     ledger_->SetBalanceReportItem(month,
                                   year,
@@ -514,7 +514,7 @@ void Contribution::AddRetry(
 
   // Don't retry one-time tip if in phase 1
   if (GetRetryPhase(step) == 1 &&
-      reconcile.category_ == ledger::REWARDS_CATEGORY::ONE_TIME_TIP) {
+      reconcile.category_ == ledger::RewardsCategory::ONE_TIME_TIP) {
     phase_one_->Complete(ledger::Result::TIP_ERROR,
                          viewing_id,
                          reconcile.category_);
@@ -667,12 +667,12 @@ void Contribution::StartPhaseTwo(const std::string& viewing_id) {
 }
 
 bool Contribution::HaveReconcileEnoughFunds(
-    const ledger::REWARDS_CATEGORY category,
+    const ledger::RewardsCategory category,
     double* fee,
     double budget,
     double balance,
     const braveledger_bat_helper::Directions& directions) {
-  if (category == ledger::REWARDS_CATEGORY::AUTO_CONTRIBUTE) {
+  if (category == ledger::RewardsCategory::AUTO_CONTRIBUTE) {
     if (budget > balance) {
       BLOG(ledger_, ledger::LogLevel::LOG_WARNING) <<
           "You do not have enough funds for auto contribution";
@@ -686,7 +686,7 @@ bool Contribution::HaveReconcileEnoughFunds(
     return true;
   }
 
-  if (category == ledger::REWARDS_CATEGORY::RECURRING_TIP) {
+  if (category == ledger::RewardsCategory::RECURRING_TIP) {
     double ac_amount = ledger_->GetContributionAmount();
 
     // don't use ac amount if ac is disabled
@@ -699,7 +699,7 @@ bool Contribution::HaveReconcileEnoughFunds(
         "You do not have enough funds to do recurring and auto contribution";
         phase_one_->Complete(ledger::Result::NOT_ENOUGH_FUNDS,
                              "",
-                             ledger::REWARDS_CATEGORY::AUTO_CONTRIBUTE);
+                             ledger::RewardsCategory::AUTO_CONTRIBUTE);
       return false;
     }
 
@@ -707,7 +707,7 @@ bool Contribution::HaveReconcileEnoughFunds(
     return true;
   }
 
-  if (category == ledger::REWARDS_CATEGORY::ONE_TIME_TIP) {
+  if (category == ledger::RewardsCategory::ONE_TIME_TIP) {
     for (const auto& direction : directions) {
       if (direction.publisher_key_.empty()) {
         BLOG(ledger_, ledger::LogLevel::LOG_ERROR) <<
@@ -747,11 +747,11 @@ bool Contribution::HaveReconcileEnoughFunds(
 }
 
 bool Contribution::IsListEmpty(
-    const ledger::REWARDS_CATEGORY category,
+    const ledger::RewardsCategory category,
     const braveledger_bat_helper::PublisherList& list,
     const braveledger_bat_helper::Directions& directions,
     double budget) {
-  if (category == ledger::REWARDS_CATEGORY::AUTO_CONTRIBUTE) {
+  if (category == ledger::RewardsCategory::AUTO_CONTRIBUTE) {
     if (list.size() == 0 || budget == 0) {
       BLOG(ledger_, ledger::LogLevel::LOG_INFO) <<
         "Auto contribution table is empty";
@@ -762,11 +762,11 @@ bool Contribution::IsListEmpty(
     }
   }
 
-  if (category == ledger::REWARDS_CATEGORY::RECURRING_TIP) {
+  if (category == ledger::RewardsCategory::RECURRING_TIP) {
     if (directions.size() == 0 || budget == 0) {
       phase_one_->Complete(ledger::Result::RECURRING_TABLE_EMPTY,
                            "",
-                           ledger::REWARDS_CATEGORY::RECURRING_TIP);
+                           ledger::RewardsCategory::RECURRING_TIP);
       BLOG(ledger_, ledger::LogLevel::LOG_INFO) <<
         "Recurring tips list is empty";
       return true;
@@ -777,7 +777,7 @@ bool Contribution::IsListEmpty(
 }
 
 void Contribution::ProcessReconcile(
-    const ledger::REWARDS_CATEGORY category,
+    const ledger::RewardsCategory category,
     const braveledger_bat_helper::PublisherList& list,
     const braveledger_bat_helper::Directions& directions,
     double budget,
@@ -827,8 +827,8 @@ void Contribution::ProcessReconcile(
     fee = fee - anon_balance;
     anon_reconcile.fee_ = anon_balance;
 
-    if (category == ledger::REWARDS_CATEGORY::RECURRING_TIP ||
-        category == ledger::REWARDS_CATEGORY::ONE_TIME_TIP) {
+    if (category == ledger::RewardsCategory::RECURRING_TIP ||
+        category == ledger::RewardsCategory::ONE_TIME_TIP) {
       braveledger_bat_helper::Directions anon_directions;
       AdjustTipsAmounts(directions,
                         &wallet_directions,
@@ -922,7 +922,7 @@ void Contribution::OnExternalWallets(
     return;
   }
 
-  if (reconcile.category_ == ledger::REWARDS_CATEGORY::AUTO_CONTRIBUTE) {
+  if (reconcile.category_ == ledger::RewardsCategory::AUTO_CONTRIBUTE) {
     auto callback = std::bind(&Contribution::OnUpholdAC,
                               this,
                               _1,

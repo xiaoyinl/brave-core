@@ -35,8 +35,8 @@ ledger::ReportType ToLedgerReportType(int32_t type) {
   return (ledger::ReportType)type;
 }
 
-ledger::REWARDS_CATEGORY ToLedgerPublisherCategory(int32_t category) {
-  return (ledger::REWARDS_CATEGORY)category;
+ledger::RewardsCategory ToLedgerPublisherCategory(int32_t category) {
+  return (ledger::RewardsCategory)category;
 }
 
 }  // namespace

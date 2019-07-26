@@ -25,7 +25,7 @@ using PublisherBannerPtr = mojom::PublisherBannerPtr;
 const char kClearFavicon[] = "clear";
 const char kIgnorePublisherBlob[] = "ignore";
 
-LEDGER_EXPORT enum REWARDS_CATEGORY {
+LEDGER_EXPORT enum RewardsCategory {
   AUTO_CONTRIBUTE = 1 << 1,  // 2
   ONE_TIME_TIP = 1 << 3,  // 8
   RECURRING_TIP = 1 << 4,  // 16

@@ -661,7 +661,7 @@ void LedgerImpl::OnReconcileComplete(ledger::Result result,
   ledger_client_->OnReconcileComplete(
       result,
       viewing_id,
-      static_cast<ledger::REWARDS_CATEGORY>(category),
+      static_cast<ledger::RewardsCategory>(category),
       probi);
 }
 
@@ -823,7 +823,7 @@ void LedgerImpl::DoDirectTip(const std::string& publisher_id,
     auto contribution = ledger::PendingContribution::New();
     contribution->publisher_key = publisher_id;
     contribution->amount = amount;
-    contribution->category = ledger::REWARDS_CATEGORY::ONE_TIME_TIP;
+    contribution->category = ledger::RewardsCategory::ONE_TIME_TIP;
 
     ledger::PendingContributionList list;
     list.push_back(std::move(contribution));
@@ -843,7 +843,7 @@ void LedgerImpl::DoDirectTip(const std::string& publisher_id,
                                                                currency);
   auto direction_list =
       std::vector<braveledger_bat_helper::RECONCILE_DIRECTION> { direction };
-  bat_contribution_->InitReconcile(ledger::REWARDS_CATEGORY::ONE_TIME_TIP,
+  bat_contribution_->InitReconcile(ledger::RewardsCategory::ONE_TIME_TIP,
                                    {},
                                    direction_list);
   callback(ledger::Result::LEDGER_OK);
@@ -1066,7 +1066,7 @@ void LedgerImpl::GetPublisherBanner(const std::string& publisher_id,
 
 void LedgerImpl::OnReconcileCompleteSuccess(
     const std::string& viewing_id,
-    const ledger::REWARDS_CATEGORY category,
+    const ledger::RewardsCategory category,
     const std::string& probi,
     const ledger::ACTIVITY_MONTH month,
     const int year,
@@ -1383,7 +1383,7 @@ void LedgerImpl::SaveContributionInfo(
     const int year,
     const uint32_t date,
     const std::string& publisher_key,
-    const ledger::REWARDS_CATEGORY category) {
+    const ledger::RewardsCategory category) {
   ledger_client_->SaveContributionInfo(probi,
                                        month,
                                        year,
