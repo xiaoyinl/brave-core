@@ -232,8 +232,8 @@ class LedgerImpl : public ledger::Ledger,
 
   void OnReconcileComplete(ledger::Result result,
                            const std::string& viewing_id,
-                           const std::string& probi = "0",
-                           int32_t category = 0);
+                           const std::string& probi,
+                           const ledger::RewardsCategory category);
 
   std::string URIEncode(const std::string& value) override;
 

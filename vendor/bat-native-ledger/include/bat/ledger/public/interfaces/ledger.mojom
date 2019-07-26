@@ -46,12 +46,12 @@ struct PendingContribution {
   double amount;
   uint64 added_date;
   string viewing_id;
-  int32 category;
+  RewardsCategory category;
 };
 
 struct PendingContributionInfo {
   string publisher_key;
-  int32 category;
+  RewardsCategory category;
   bool verified;
   string name;
   string url;
@@ -222,4 +222,10 @@ enum Result {
   PENDING_NOT_ENOUGH_FUNDS = 22,
   RECURRING_TABLE_EMPTY = 23,
   EXPIRED_TOKEN = 24,
+};
+
+enum RewardsCategory {
+  AUTO_CONTRIBUTE = 2,
+  ONE_TIME_TIP = 8,
+  RECURRING_TIP = 16,
 };

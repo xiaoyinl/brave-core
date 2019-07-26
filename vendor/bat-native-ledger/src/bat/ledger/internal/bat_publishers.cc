@@ -694,9 +694,10 @@ void BatPublishers::OnPublishersListSaved(ledger::Result result) {
 }
 
 bool BatPublishers::loadPublisherList(const std::string& data) {
+  const std::string temp = "[[\"3zsistemi.si\",true,false,\"26430608-eb7a-4d0a-a524-7029f2bc97ed\",{}]]";
   std::map<std::string, braveledger_bat_helper::SERVER_LIST> list;
 
-  bool success = braveledger_bat_helper::getJSONServerList(data, &list);
+  bool success = braveledger_bat_helper::getJSONServerList(temp, &list);
 
   if (success) {
     server_list_ = list;

@@ -173,8 +173,8 @@ class RewardsDOMHandler : public WebUIMessageHandler,
   void OnReconcileComplete(brave_rewards::RewardsService* rewards_service,
                            unsigned int result,
                            const std::string& viewing_id,
-                           int32_t category,
-                           const std::string& probi) override;
+                           const std::string& probi,
+                           int32_t category) override;
   void OnPendingContributionSaved(
       brave_rewards::RewardsService* rewards_service,
       int result) override;
@@ -869,8 +869,8 @@ void RewardsDOMHandler::OnReconcileComplete(
     brave_rewards::RewardsService* rewards_service,
     unsigned int result,
     const std::string& viewing_id,
-    int32_t category,
-    const std::string& probi) {
+    const std::string& probi,
+    int32_t category) {
   if (web_ui()->CanCallJavascript()) {
     base::DictionaryValue complete;
     complete.SetKey("result", base::Value(static_cast<int>(result)));

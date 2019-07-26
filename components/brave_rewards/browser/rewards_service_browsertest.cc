@@ -1068,8 +1068,8 @@ class BraveRewardsBrowserTest :
   void OnReconcileComplete(brave_rewards::RewardsService* rewards_service,
                            unsigned int result,
                            const std::string& viewing_id,
-                           int32_t category,
-                           const std::string& probi) {
+                           const std::string& probi,
+                           int32_t category) {
     const size_t size = probi.size();
     std::string amount = "0";
     if (size > 18) {
