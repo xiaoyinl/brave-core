@@ -22,6 +22,20 @@ using PublisherInfoList = std::vector<PublisherInfoPtr>;
 using PublisherBanner = mojom::PublisherBanner;
 using PublisherBannerPtr = mojom::PublisherBannerPtr;
 
+using TransactionInfo = mojom::TransactionInfo;
+using TransactionInfoPtr = mojom::TransactionInfoPtr;
+
+using ExchangeRateInfo = mojom::ExchangeRateInfo;
+using ExchangeRateInfoPtr = mojom::ExchangeRateInfoPtr;
+using ExchangeRateInfoList = std::vector<ExchangeRateInfoPtr>;
+
+using BallotInfo = mojom::BallotInfo;
+using BallotInfoPtr = mojom::BallotInfoPtr;
+using BallotInfoList = std::vector<BallotInfoPtr>;
+
+using TransactionStateInfo = mojom::TransactionStateInfo;
+using TransactionStateInfoPtr = mojom::TransactionStateInfoPtr;
+
 const char kClearFavicon[] = "clear";
 const char kIgnorePublisherBlob[] = "ignore";
 
@@ -80,9 +94,6 @@ LEDGER_EXPORT struct ActivityInfoFilter {
   bool non_verified;
   uint32_t min_visits;
 };
-
-using TransactionInfo = mojom::TransactionInfo;
-using TransactionInfoPtr = mojom::TransactionInfoPtr;
 
 }  // namespace ledger
 

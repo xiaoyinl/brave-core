@@ -27,7 +27,7 @@ struct TransactionInfo {
   uint32_t created_date;
   uint32_t reconciled_date;
 
-  std::map<std::string, double> rates;
+  std::map<std::string, double> exchange_rates;
 
   std::map<std::string, int> ballots;
 };

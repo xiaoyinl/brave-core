@@ -70,43 +70,6 @@ struct WALLET_INFO_ST {
   std::vector<uint8_t> keyInfoSeed_;
 };
 
-struct TRANSACTION_BALLOT_ST {
-  TRANSACTION_BALLOT_ST();
-  ~TRANSACTION_BALLOT_ST();
-
-  // load from json string
-  bool loadFromJson(const std::string & json);
-
-  std::string publisher_;
-  unsigned int offset_ = 0u;
-};
-
-struct TRANSACTION_ST {
-  TRANSACTION_ST();
-  TRANSACTION_ST(const TRANSACTION_ST& transaction);
-  ~TRANSACTION_ST();
-
-  // load from json string
-  bool loadFromJson(const std::string & json);
-
-  std::string viewingId_;
-  std::string surveyorId_;
-  std::string contribution_fiat_amount_;
-  std::string contribution_fiat_currency_;
-  std::map<std::string, double> contribution_rates_;
-  std::string contribution_altcurrency_;
-  std::string contribution_probi_;
-  std::string contribution_fee_;
-  std::string submissionStamp_;
-  std::string submissionId_;
-  std::string anonizeViewingId_;
-  std::string registrarVK_;
-  std::string masterUserToken_;
-  std::vector<std::string> surveyorIds_;
-  unsigned int votes_ = 0u;
-  std::vector<TRANSACTION_BALLOT_ST> ballots_;
-};
-
 struct BALLOT_ST {
   BALLOT_ST();
   BALLOT_ST(const BALLOT_ST& ballot);

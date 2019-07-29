@@ -41,12 +41,12 @@ class PublisherInfoDatabase {
     db_.set_error_callback(error_callback);
   }
 
-  bool InsertOrUpdateTransactionInfo(
-      const TransactionInfo& info);
-
   void GetOneTimeTips(ledger::PublisherInfoList* list,
                       ledger::ACTIVITY_MONTH month,
                       int year);
+
+  bool InsertOrUpdateTransactionInfo(
+      const TransactionInfo& info);
 
   bool InsertOrUpdateBallot(
       const std::string& transaction_id,
@@ -55,7 +55,7 @@ class PublisherInfoDatabase {
 
   bool GetBallots(
     const std::string& transaction_id,
-    std::map<std::string, int>* ballots);
+    ledger::BallotInfoList* list);
 
   bool InsertOrUpdateExchangeRate(
       const std::string& transaction_id,
@@ -64,7 +64,7 @@ class PublisherInfoDatabase {
 
   bool GetExchangeRates(
       const std::string& transaction_id,
-      std::map<std::string, double>* exchange_rates);
+      ledger::ExchangeRateInfoList* list);
 
   bool InsertOrUpdatePublisherInfo(const ledger::PublisherInfo& info);
 

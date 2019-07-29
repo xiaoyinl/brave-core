@@ -280,61 +280,6 @@ bool PublisherInfoDatabase::RestorePublishers() {
   return restore_q.Run();
 }
 
-/**
- *
- * TRANSACTION INFO
- *
- */
-
-bool PublisherInfoDatabase::CreateTransactionInfoTable() {
-  DCHECK_CALLED_ON_VALID_SEQUENCE(sequence_checker_);
-
-  const char* name = "transaction_info";
-  if (GetDB().DoesTableExist(name)) {
-    return true;
-  }
-
-  std::string sql;
-  sql.append("CREATE TABLE ");
-  sql.append(name);
-  sql.append(
-      "("
-      "id LONGVARCHAR NOT NULL PRIMARY KEY UNIQUE,"
-      "type INTEGER NOT NULL,"
-      "amount DOUBLE DEFAULT 0 NOT NULL,"
-      "probi TEXT \"0\" NOT NULL,"
-      "created_date INTEGER NOT NULL,"
-      "reconciled_date INTEGER NOT NULL)");
-
-  return GetDB().Execute(sql.c_str());
-}
-
-bool PublisherInfoDatabase::InsertOrUpdateTransactionInfo(
-    const TransactionInfo& info) {
-  DCHECK_CALLED_ON_VALID_SEQUENCE(sequence_checker_);
-
-  bool initialized = Init();
-  DCHECK(initialized);
-
-  if (!initialized) {
-    return false;
-  }
-
-  sql::Statement statement(GetDB().GetCachedStatement(SQL_FROM_HERE,
-      "INSERT OR REPLACE INTO transaction_info "
-      "(id, type, amount, probi, created_date, reconciled_date) "
-      "VALUES (?, ?, ?, ?, ?, ?)"));
-
-  statement.BindString(0, info.id);
-  statement.BindInt(1, info.type);
-  statement.BindDouble(2, info.amount);
-  statement.BindString(3, info.probi);
-  statement.BindInt64(4, info.created_date);
-  statement.BindInt64(5, info.reconciled_date);
-
-  return statement.Run();
-}
-
 void PublisherInfoDatabase::GetOneTimeTips(ledger::PublisherInfoList* list,
                                            ledger::ACTIVITY_MONTH month,
                                            int year) {
@@ -374,6 +319,61 @@ void PublisherInfoDatabase::GetOneTimeTips(ledger::PublisherInfoList* list,
 
     list->push_back(std::move(publisher));
   }
+}
+
+/**
+ *
+ * TRANSACTION INFO
+ *
+ */
+
+bool PublisherInfoDatabase::CreateTransactionInfoTable() {
+  DCHECK_CALLED_ON_VALID_SEQUENCE(sequence_checker_);
+
+  const char* name = "transaction_info";
+  if (GetDB().DoesTableExist(name)) {
+    return true;
+  }
+
+  std::string sql;
+  sql.append("CREATE TABLE ");
+  sql.append(name);
+  sql.append(
+      "("
+      "id LONGVARCHAR NOT NULL PRIMARY KEY UNIQUE,"
+      "type INTEGER NOT NULL,"
+      "amount DOUBLE DEFAULT 0 NOT NULL,"
+      "probi TEXT \"0\" NOT NULL,"
+      "created_date INTEGER NOT NULL,"
+      "reconciled_date INTEGER NOT NULL)");
+
+  return GetDB().Execute(sql.c_str());
+}
+
+bool PublisherInfoDatabase::InsertOrUpdateTransactionInfo(
+    const ledger::TransactionInfo& info) {
+  DCHECK_CALLED_ON_VALID_SEQUENCE(sequence_checker_);
+
+  bool initialized = Init();
+  DCHECK(initialized);
+
+  if (!initialized) {
+    return false;
+  }
+
+  sql::Statement statement(GetDB().GetCachedStatement(SQL_FROM_HERE,
+      "INSERT OR REPLACE INTO transaction_info "
+      "(id, type, amount, probi, created_date, reconciled_date) "
+      "VALUES (?, ?, ?, ?, ?, ?)"));
+
+  statement.BindString(0, info.id);
+  statement.BindInt(1, info.type);
+  statement.BindDouble(2, info.amount);
+  statement.BindString(3, info.probi);
+  statement.BindInt64(4, info.created_date);
+  statement.BindInt64(5, info.reconciled_date);
+
+  return statement.Run();
 }
 
 /**
@@ -436,10 +436,10 @@ bool PublisherInfoDatabase::InsertOrUpdateBallot(
 
 bool PublisherInfoDatabase::GetBallots(
     const std::string& transaction_id,
-    std::map<std::string, int>* ballots) {
+    ledger::BallotInfoList* list) {
   DCHECK_CALLED_ON_VALID_SEQUENCE(sequence_checker_);
 
-  DCHECK(ballots);
+  DCHECK(list);
 
   bool initialized = Init();
   DCHECK(initialized);
@@ -465,7 +465,7 @@ bool PublisherInfoDatabase::GetBallots(
     auto publisher_key = info_sql.ColumnString(0);
     auto votes = info_sql.ColumnInt(1);
 
-    ballots->insert({publisher_key, votes});
+    list->insert({publisher_key, votes});
   }
 
   return true;
@@ -529,9 +529,10 @@ bool PublisherInfoDatabase::InsertOrUpdateExchangeRate(
 
 bool PublisherInfoDatabase::GetExchangeRates(
     const std::string& transaction_id,
-    std::map<std::string, double>* exchange_rates) {
+    ledger::ExchangeRateInfoList* list) {
   DCHECK_CALLED_ON_VALID_SEQUENCE(sequence_checker_);
-  DCHECK(exchange_rates);
+
+  DCHECK(list);
 
   bool initialized = Init();
   DCHECK(initialized);
@@ -556,7 +557,7 @@ bool PublisherInfoDatabase::GetExchangeRates(
     auto currency_code = info_sql.ColumnString(0);
     auto rate = info_sql.ColumnDouble(1);
 
-    exchange_rates->insert({currency_code, rate});
+    list->insert({currency_code, rate});
   }
 
   return true;
