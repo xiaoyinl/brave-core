@@ -272,15 +272,26 @@ void AdsImpl::OnIdle() {
   BLOG(INFO) << "Browser state changed to idle";
 }
 
-void AdsImpl::OnUnIdle() {
+void AdsImpl::OnUnIdle(const uint64_t idle_time, const bool was_locked) {
   // TODO(Terry Mancey): Implement Log (#44)
   // 'Idle state changed', { idleState: action.get('idleState') }
 
-  BLOG(INFO) << "Browser state changed to unidle";
+  BLOG(INFO) << "Browser state changed to unidle after " << idle_time
+      << " seconds";
 
   client_->UpdateLastUserIdleStopTime();
 
   if (IsMobile()) {
+    return;
+  }
+
+  if (was_locked) {
+    BLOG(INFO) << "Notification not made: Device was locked";
+    return;
+  }
+
+  if (idle_time > kMaximumIdleThresholdInSeconds) {
+    BLOG(INFO) << "Notification not made: Exceeded maximum idle time";
     return;
   }
 
