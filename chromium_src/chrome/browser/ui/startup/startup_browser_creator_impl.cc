@@ -15,6 +15,6 @@ class BraveGoogleKeysInfoBarDelegate {
   }
 };
 
-#include "../../../../../../chrome/browser/ui/startup/startup_browser_creator_impl.cc" // NOLINT
+#include "../../../../../../chrome/browser/ui/startup/startup_browser_creator_impl.cc"  // NOLINT
 
 #undef GoogleApiKeysInfoBarDelegate
