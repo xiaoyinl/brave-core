@@ -37,6 +37,7 @@ extern const char kReferralCheckedForPromoCodeFile[];
 extern const char kHTTPSEVerywhereControlType[];
 extern const char kNoScriptControlType[];
 extern const char kShieldsAdvancedViewEnabled[];
+extern const char kShieldsStatsBadgeVisible[];
 extern const char kAdControlType[];
 extern const char kGoogleLoginControlType[];
 extern const char kFBEmbedControlType[];
