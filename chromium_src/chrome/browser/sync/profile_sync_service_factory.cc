@@ -4,17 +4,6 @@
  * You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "components/sync/driver/profile_sync_service.h"
-
-class Profile;
-
-namespace {
-std::unique_ptr<syncer::ProfileSyncService> BraveBuildServiceInstanceFor(
-    Profile* profile,
-    syncer::ProfileSyncService::InitParams init_params);
-}  // namespace
-
-#include "../../../../../chrome/browser/sync/profile_sync_service_factory.cc"  // NOLINT
-
 #include "brave/components/brave_sync/buildflags/buildflags.h"
 
 #if BUILDFLAG(ENABLE_BRAVE_SYNC)
@@ -36,3 +25,5 @@ std::unique_ptr<syncer::ProfileSyncService> BraveBuildServiceInstanceFor(
 }
 
 }  // namespace
+
+#include "../../../../../chrome/browser/sync/profile_sync_service_factory.cc"  // NOLINT
