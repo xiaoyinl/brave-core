@@ -1,12 +1,12 @@
 diff --git a/components/sync_bookmarks/bookmark_change_processor.cc b/components/sync_bookmarks/bookmark_change_processor.cc
-index 35a73a07bbcdd8aeba13acf37c6754aadb039768..ac7ebcbda6bc1de634b81be44ce98c2c3656b3ac 100644
+index 35a73a07bbcdd8aeba13acf37c6754aadb039768..58c75121ea52a8268a84cadb2532a3238fe5d71f 100644
 --- a/components/sync_bookmarks/bookmark_change_processor.cc
 +++ b/components/sync_bookmarks/bookmark_change_processor.cc
 @@ -87,6 +87,7 @@ void BookmarkChangeProcessor::UpdateSyncNodeProperties(
    bookmark_specifics.set_creation_time_us(src->date_added().ToInternalValue());
    dst->SetBookmarkSpecifics(bookmark_specifics);
    SetSyncNodeFavicon(src, model, dst);
-+  brave_sync::AddBraveMetaInfo(src, model);
++  BRAVE_BOOKMARK_CHANGE_PROCESSOR_UPDATE_SYNC_NODE_PROPERTIES
    SetSyncNodeMetaInfo(src, dst);
  }
  
@@ -47,11 +47,11 @@ index 35a73a07bbcdd8aeba13acf37c6754aadb039768..ac7ebcbda6bc1de634b81be44ce98c2c
                     << src.GetBookmarkSpecifics().url();
          continue;
        }
-+      bookmark_model_->SetNodeMetaInfo(dst, "FirstLoadedFavicon", "true");
++      BRAVE_BOOKMARK_CHANGE_PROCESSOR_APPLY_CHANGES_FROM_SYNC_MODEL_1
        model_associator_->Associate(dst, src);
      }
  
-+    BRAVE_BOOKMARK_CHANGE_PROCESSOR_APPLY_CHANGES_FROM_SYNC_MODEL
++    BRAVE_BOOKMARK_CHANGE_PROCESSOR_APPLY_CHANGES_FROM_SYNC_MODEL_2
      to_reposition.insert(std::make_pair(src.GetPositionIndex(), dst));
      bookmark_model_->SetNodeSyncTransactionVersion(dst, model_version);
    }
