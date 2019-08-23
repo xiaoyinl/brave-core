@@ -164,16 +164,16 @@ export const setAllowScriptOriginsOnce = (origins: Array<string>, tabId: number)
   })
 
 export type GetViewPreferencesData = {
-  showAdvancedView?: boolean
-  statsBadgeVisible?: boolean
+  showAdvancedView: boolean
+  statsBadgeVisible: boolean
 }
 
 const settingsKeys = {
   showAdvancedView: { key: 'brave.shields.advanced_view_enabled', type: chrome.settingsPrivate.PrefType.BOOLEAN },
   statsBadgeVisible: { key: 'brave.shields.stats_badge_visible', type: chrome.settingsPrivate.PrefType.BOOLEAN }
 }
-export async function getViewPreferences (): Promise<GetViewPreferencesData> {
-  let newSettings: GetViewPreferencesData = {}
+export async function getViewPreferences (): Promise<GetViewPreferencesData | {}> {
+  let newSettings = {}
   await Promise.all(
     Object.keys(settingsKeys).map(async (name) => {
       // Get setting by internal key

@@ -9,9 +9,11 @@ import * as storageAPI from '../api/storageAPI'
 import * as shieldsPanelTypes from '../../constants/shieldsPanelTypes'
 import * as windowTypes from '../../constants/windowTypes'
 import * as tabTypes from '../../constants/tabTypes'
+import * as settingsTypes from '../../constants/settingsTypes'
 import * as webNavigationTypes from '../../constants/webNavigationTypes'
 import { State, PersistentData } from '../../types/state/shieldsPannelState'
 import { Actions } from '../../types/actions/index'
+import { SettingsData } from '../../types/other/settingsTypes'
 
 // State helpers
 import * as shieldsPanelState from '../../state/shieldsPanelState'
@@ -28,8 +30,7 @@ import {
   setAllowCookies,
   toggleShieldsValue,
   requestShieldPanelData,
-  setAllowScriptOriginsOnce,
-  getViewPreferences
+  setAllowScriptOriginsOnce
 } from '../api/shieldsAPI'
 import { reloadTab } from '../api/tabsAPI'
 
@@ -40,6 +41,7 @@ import { areObjectsEqual } from '../../helpers/objectUtils'
 export default function shieldsPanelReducer (
   state: State = {
     persistentData: storageAPI.loadPersistentData(),
+    settingsData: storageAPI.initialSettingsData,
     tabs: {},
     windows: {},
     currentWindowId: -1
@@ -83,13 +85,6 @@ export default function shieldsPanelReducer (
       if (tab.active && tab.id) {
         state = shieldsPanelState.requestDataAndUpdateActiveTab(state, tab.windowId, tab.id)
         shieldsPanelState.updateShieldsIcon(state)
-        getViewPreferences()
-          .then((settings: chrome.braveShields.BraveShieldsViewPreferences) => {
-            if (state.persistentData.statsBadgeVisible === settings.statsBadgeVisible) {
-              state = shieldsPanelState.updatePersistentData(state, { statsBadgeVisible: settings.statsBadgeVisible })
-            }
-          })
-          .catch((error: any) => console.error('[Shields]: can\'t get preferences data', error))
       }
       break
     }
@@ -285,6 +280,11 @@ export default function shieldsPanelReducer (
         .catch(() => {
           console.error('Could not set allow script origins once')
         })
+      break
+    }
+    case settingsTypes.SET_STORE_SETTINGS_CHANGE: {
+      const settingsData: SettingsData | Partial<SettingsData> = action.settingsData
+      state = { ...state, settingsData: { ...state.settingsData, ...settingsData } }
       break
     }
     // NoScriptInfo is the name we call for the list of scripts that are either

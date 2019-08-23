@@ -4,6 +4,7 @@ import { webNavigationActions } from './webNavigationActions'
 import { windowActions } from './windowActions'
 import { cosmeticFilterActions } from './cosmeticFilterActions'
 import { runtimeActions } from './runtimeActions'
+import { settingsActions } from './settingsActions'
 
 export type Actions =
   shieldPanelActions |
@@ -11,4 +12,5 @@ export type Actions =
   webNavigationActions |
   windowActions |
   cosmeticFilterActions |
-  runtimeActions
+  runtimeActions |
+  settingsActions

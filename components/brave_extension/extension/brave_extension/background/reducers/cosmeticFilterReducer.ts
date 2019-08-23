@@ -50,6 +50,7 @@ const updateActiveTab = (state: State, windowId: number, tabId: number): State =
 export default function cosmeticFilterReducer (
   state: State = {
     persistentData: storageAPI.loadPersistentData(),
+    settingsData: storageAPI.initialSettingsData,
     tabs: {},
     windows: {},
     currentWindowId: -1
