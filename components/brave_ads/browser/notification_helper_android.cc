@@ -40,7 +40,7 @@ bool NotificationHelperAndroid::ShouldShowNotifications() const {
   return is_notifications_enabled && is_notification_channel_enabled;
 }
 
-bool NotificationHelperAndroid::ShowMyFirstAdNotification() const {
+bool NotificationHelperAndroid::ShowMyFirstAdNotification() {
   if (!ShouldShowNotifications()) {
     return false;
   }
@@ -50,6 +50,16 @@ bool NotificationHelperAndroid::ShowMyFirstAdNotification() const {
 
   return true;
 }
+
+NotificationHelperAndroid* NotificationHelperAndroid::GetInstance() {
+  return base::Singleton<NotificationHelperAndroid>::get();
+}
+
+NotificationHelper* NotificationHelper::GetInstance() {
+  return NotificationHelperAndroid::GetInstance();
+}
+
+///////////////////////////////////////////////////////////////////////////////
 
 bool NotificationHelperAndroid::IsBraveAdsNotificationChannelEnabled() const {
   if (GetOperatingSystemVersion() < kMinimumVersionForNotificationChannels) {
@@ -74,14 +84,6 @@ int NotificationHelperAndroid::GetOperatingSystemVersion() const {
       &major_version, &minor_version, &bugfix_version);
 
   return major_version;
-}
-
-NotificationHelperAndroid* NotificationHelperAndroid::GetInstance() {
-  return base::Singleton<NotificationHelperAndroid>::get();
-}
-
-NotificationHelper* NotificationHelper::GetInstance() {
-  return NotificationHelperAndroid::GetInstance();
 }
 
 }  // namespace brave_ads

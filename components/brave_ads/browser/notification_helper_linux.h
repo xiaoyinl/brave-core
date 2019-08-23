@@ -25,9 +25,9 @@ class NotificationHelperLinux :
 
  private:
   // NotificationHelper impl
-  bool ShouldShowNotifications() const override;
+  bool ShouldShowNotifications() override;
 
-  bool ShowMyFirstAdNotification() const override;
+  bool ShowMyFirstAdNotification() override;
 
   friend struct base::DefaultSingletonTraits<NotificationHelperLinux>;
   DISALLOW_COPY_AND_ASSIGN(NotificationHelperLinux);

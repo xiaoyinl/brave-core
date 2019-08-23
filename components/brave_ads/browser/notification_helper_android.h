@@ -37,7 +37,7 @@ class NotificationHelperAndroid :
   // NotificationHelper impl
   bool ShouldShowNotifications() const override;
 
-  bool ShowMyFirstAdNotification() const override;
+  bool ShowMyFirstAdNotification() override;
 
   friend struct base::DefaultSingletonTraits<NotificationHelperAndroid>;
   DISALLOW_COPY_AND_ASSIGN(NotificationHelperAndroid);

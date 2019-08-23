@@ -18,9 +18,9 @@ class NotificationHelper {
  public:
   static NotificationHelper* GetInstance();
 
-  virtual bool ShouldShowNotifications() const;
+  virtual bool ShouldShowNotifications();
 
-  virtual bool ShowMyFirstAdNotification() const;
+  virtual bool ShowMyFirstAdNotification();
 
  protected:
   NotificationHelper();

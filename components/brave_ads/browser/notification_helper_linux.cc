@@ -11,13 +11,13 @@ NotificationHelperLinux::NotificationHelperLinux() = default;
 
 NotificationHelperLinux::~NotificationHelperLinux() = default;
 
-bool NotificationHelperLinux::ShouldShowNotifications() const {
+bool NotificationHelperLinux::ShouldShowNotifications() {
   // Unable to find a way of detecting if notifications are enabled within the
   // operating system so always return true
   return true;
 }
 
-bool NotificationHelperLinux::ShowMyFirstAdNotification() const {
+bool NotificationHelperLinux::ShowMyFirstAdNotification() {
   return false;
 }
 

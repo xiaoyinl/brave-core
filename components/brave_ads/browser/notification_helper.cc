@@ -11,11 +11,11 @@ NotificationHelper::NotificationHelper() = default;
 
 NotificationHelper::~NotificationHelper() = default;
 
-bool NotificationHelper::ShouldShowNotifications() const {
+bool NotificationHelper::ShouldShowNotifications() {
   return true;
 }
 
-bool NotificationHelper::ShowMyFirstAdNotification() const {
+bool NotificationHelper::ShowMyFirstAdNotification() {
   return false;
 }
 
