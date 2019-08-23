@@ -205,7 +205,7 @@ void BatAdsClientMojoBridge::ShowNotification(
   bat_ads_client_->ShowNotification(info->ToJson());
 }
 
-bool BatAdsClientMojoBridge::ShouldShowNotifications() const {
+bool BatAdsClientMojoBridge::ShouldShowNotifications() {
   if (!connected()) {
     return false;
   }

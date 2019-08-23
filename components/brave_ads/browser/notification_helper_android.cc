@@ -29,7 +29,7 @@ NotificationHelperAndroid::NotificationHelperAndroid() = default;
 
 NotificationHelperAndroid::~NotificationHelperAndroid() = default;
 
-bool NotificationHelperAndroid::ShouldShowNotifications() const {
+bool NotificationHelperAndroid::ShouldShowNotifications() {
   JNIEnv* env = AttachCurrentThread();
   int status = Java_NotificationSystemStatusUtil_getAppNotificationStatus(env);
   bool is_notifications_enabled = (status == kAppNotificationsStatusEnabled ||

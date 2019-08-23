@@ -1775,7 +1775,7 @@ void AdsServiceImpl::ShowNotification(
 #endif
 }
 
-bool AdsServiceImpl::ShouldShowNotifications() const {
+bool AdsServiceImpl::ShouldShowNotifications() {
   return NotificationHelper::GetInstance()->ShouldShowNotifications();
 }
 

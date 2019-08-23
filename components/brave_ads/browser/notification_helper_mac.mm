@@ -13,7 +13,7 @@ NotificationHelperMac::NotificationHelperMac() = default;
 
 NotificationHelperMac::~NotificationHelperMac() = default;
 
-bool NotificationHelperMac::IsNotificationsAvailable() {
+bool NotificationHelperMac::ShouldShowNotifications() {
   // macOS 10.13 and older do not support native notifications. Chromium will
   // fall back to the Chromium Message Center if native notifications are not
   // supported.

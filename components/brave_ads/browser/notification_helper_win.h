@@ -6,6 +6,9 @@
 #ifndef BRAVE_COMPONENTS_BRAVE_ADS_BROWSER_NOTIFICATION_HELPER_WIN_H_
 #define BRAVE_COMPONENTS_BRAVE_ADS_BROWSER_NOTIFICATION_HELPER_WIN_H_
 
+#include <windows.ui.notifications.h>
+#include <wrl/event.h>
+
 #include "base/macros.h"
 #include "base/memory/singleton.h"
 #include "base/memory/weak_ptr.h"
@@ -24,10 +27,26 @@ class NotificationHelperWin :
   static NotificationHelperWin* GetInstance();
 
  private:
-  // NotificationHelper impl
-  bool ShouldShowNotifications() const override;
+  bool IsFocusAssistEnabled() const;
 
-  bool ShowMyFirstAdNotification() const override;
+  bool IsNotificationsEnabled();
+
+  base::string16 GetAppId() const;
+
+  HRESULT InitializeToastNotifier();
+
+  template <unsigned int size, typename T>
+  HRESULT CreateActivationFactory(
+      wchar_t const (&class_name)[size],
+      T** object) const;
+
+  Microsoft::WRL::ComPtr<ABI::Windows::UI::Notifications::
+      IToastNotifier> notifier_;
+
+  // NotificationHelper impl
+  bool ShouldShowNotifications() override;
+
+  bool ShowMyFirstAdNotification() override;
 
   friend struct base::DefaultSingletonTraits<NotificationHelperWin>;
   DISALLOW_COPY_AND_ASSIGN(NotificationHelperWin);

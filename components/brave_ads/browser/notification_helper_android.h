@@ -35,7 +35,7 @@ class NotificationHelperAndroid :
   int GetOperatingSystemVersion() const;
 
   // NotificationHelper impl
-  bool ShouldShowNotifications() const override;
+  bool ShouldShowNotifications() override;
 
   bool ShowMyFirstAdNotification() override;
 
