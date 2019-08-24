@@ -1,5 +1,5 @@
 diff --git a/chrome/browser/extensions/chrome_extensions_browser_client.cc b/chrome/browser/extensions/chrome_extensions_browser_client.cc
-index 87a8ac4f1635d0f11067da7644987a2cff16aa06..4fc1deebd4ad047fa9f00efbd2d5490041b5d32e 100644
+index 87a8ac4f1635d0f11067da7644987a2cff16aa06..cb577b868118852389c73740c4587d4cfbe9fe71 100644
 --- a/chrome/browser/extensions/chrome_extensions_browser_client.cc
 +++ b/chrome/browser/extensions/chrome_extensions_browser_client.cc
 @@ -9,6 +9,8 @@
@@ -25,3 +25,11 @@ index 87a8ac4f1635d0f11067da7644987a2cff16aa06..4fc1deebd4ad047fa9f00efbd2d54900
  }
  
  ChromeExtensionsBrowserClient::~ChromeExtensionsBrowserClient() {}
+@@ -152,6 +155,7 @@ content::BrowserContext* ChromeExtensionsBrowserClient::GetOffTheRecordContext(
+ content::BrowserContext* ChromeExtensionsBrowserClient::GetOriginalContext(
+     content::BrowserContext* context) {
+   DCHECK(context);
++  BRAVE_GET_ORIGINAL_CONTEXT_
+   return static_cast<Profile*>(context)->GetOriginalProfile();
+ }
+ 
