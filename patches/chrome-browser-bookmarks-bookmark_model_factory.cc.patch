@@ -1,0 +1,12 @@
+diff --git a/chrome/browser/bookmarks/bookmark_model_factory.cc b/chrome/browser/bookmarks/bookmark_model_factory.cc
+index e54ad07d10fef4824e1b8cebd64a12059d2a5c5c..484af97652ca9d72c16685f179d908a4117d4938 100644
+--- a/chrome/browser/bookmarks/bookmark_model_factory.cc
++++ b/chrome/browser/bookmarks/bookmark_model_factory.cc
+@@ -87,6 +87,7 @@ void BookmarkModelFactory::RegisterProfilePrefs(
+ 
+ content::BrowserContext* BookmarkModelFactory::GetBrowserContextToUse(
+     content::BrowserContext* context) const {
++  BRAVE_GET_BROWSER_CONTEXT_TO_USE_
+   return chrome::GetBrowserContextRedirectedInIncognito(context);
+ }
+ 
