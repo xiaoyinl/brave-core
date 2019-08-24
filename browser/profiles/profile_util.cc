@@ -4,17 +4,31 @@
  * You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "brave/browser/profiles/profile_util.h"
+
+#include "base/files/file_path.h"
+#include "brave/browser/profiles/brave_profile_impl.h"
 #include "brave/browser/tor/buildflags.h"
 #include "brave/common/tor/tor_constants.h"
+#include "chrome/browser/browser_process.h"
 #include "chrome/browser/profiles/profile.h"
+#include "chrome/browser/profiles/profile_manager.h"
 #include "components/prefs/pref_service.h"
 
 namespace brave {
 
 bool IsTorProfile(const Profile* profile) {
-#if BUILDFLAG(ENABLE_TOR)
   DCHECK(profile);
-  return profile->GetPath().BaseName() == base::FilePath(tor::kTorProfileDir);
+  return IsTorProfile(profile->GetPath());
+}
+
+bool IsTorProfile(content::BrowserContext* context) {
+  DCHECK(context);
+  return IsTorProfile(Profile::FromBrowserContext(context));
+}
+
+bool IsTorProfile(base::FilePath path) {
+#if BUILDFLAG(ENABLE_TOR)
+  return path.BaseName() == base::FilePath(tor::kTorProfileDir);
 #else
   return false;
 #endif
@@ -23,6 +37,22 @@ bool IsTorProfile(const Profile* profile) {
 bool IsGuestProfile(Profile* profile) {
   DCHECK(profile);
   return profile->GetOriginalProfile()->IsGuestSession();
+}
+
+Profile* GetTorParentProfile(content::BrowserContext* context) {
+  DCHECK(context);
+  Profile* profile = static_cast<Profile*>(context)->GetOriginalProfile();
+  return static_cast<BraveProfileImpl*>(profile)->GetParentProfile();
+}
+
+Profile* GetTorParentProfile(base::FilePath path) {
+  DCHECK(IsTorProfile(path));
+
+  ProfileManager* profile_manager = g_browser_process->profile_manager();
+  DCHECK(profile_manager);
+
+  base::FilePath parent_profile_path = path.DirName().DirName();
+  return profile_manager->GetProfileByPath(parent_profile_path);
 }
 
 }  // namespace brave
