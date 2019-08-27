@@ -60,6 +60,7 @@ class BraveBrowserProcessImpl : public BrowserProcessImpl {
   void ResourceDispatcherHostCreated() override;
 
   ProfileManager* profile_manager() override;
+  BackgroundModeManager* background_mode_manager() override;
 
   brave_shields::AdBlockService* ad_block_service();
   brave_shields::AdBlockCustomFiltersService* ad_block_custom_filters_service();
@@ -85,6 +86,7 @@ class BraveBrowserProcessImpl : public BrowserProcessImpl {
 
  private:
   void CreateProfileManager();
+  void CreateBackgroundModeManager();
 
   BraveComponent::Delegate* brave_component_updater_delegate();
 
