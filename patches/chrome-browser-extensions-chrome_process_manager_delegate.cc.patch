@@ -1,0 +1,12 @@
+diff --git a/chrome/browser/extensions/chrome_process_manager_delegate.cc b/chrome/browser/extensions/chrome_process_manager_delegate.cc
+index 9d7ba9e948e1021f714c396cbc4ccc5689b29505..7a68bdf2cd56324bc57dffb860820f874547493e 100644
+--- a/chrome/browser/extensions/chrome_process_manager_delegate.cc
++++ b/chrome/browser/extensions/chrome_process_manager_delegate.cc
+@@ -167,6 +167,7 @@ void ChromeProcessManagerDelegate::OnBrowserOpened(Browser* browser) {
+   if (profile->IsOffTheRecord()) {
+     Profile* original_profile = profile->GetOriginalProfile();
+     ProcessManager* original_manager = ProcessManager::Get(original_profile);
++    BRAVE_OVERRIDE_ORIGINAL_PROFILE_IF_TOR_
+     DCHECK(original_manager);
+     DCHECK_EQ(original_profile, original_manager->browser_context());
+     original_manager->MaybeCreateStartupBackgroundHosts();
