@@ -20,6 +20,7 @@ import { reloadTab } from '../api/tabsAPI'
 import {
   removeSiteFilter,
   addSiteCosmeticFilter,
+  applyAdblockCosmeticFilters,
   applyCSSCosmeticFilters,
   removeAllFilters
 } from '../api/cosmeticFilterAPI'
@@ -69,8 +70,8 @@ export default function cosmeticFilterReducer (
         state = shieldsPanelState.resetBlockingStats(state, action.tabId)
         state = shieldsPanelState.resetBlockingResources(state, action.tabId)
         state = noScriptState.resetNoScriptInfo(state, action.tabId, getOrigin(action.url))
-        applyCSSCosmeticFilters(action.tabId, getHostname(action.url), tabData.cosmeticBlocking === 'block')
       }
+      applyCSSCosmeticFilters(action.tabId, getHostname(action.url))
       break
     }
     case windowTypes.WINDOW_REMOVED: {
@@ -151,6 +152,19 @@ export default function cosmeticFilterReducer (
         console.error('Could not add filter:', e)
       })
       break
+    }
+    case cosmeticFilterTypes.PAGE_CONTENT_READY_FOR_INJECTION: {
+      const tabData = state.tabs[action.tabId]
+      let cosmeticBlockingEnabled: boolean
+      if (!tabData) {
+        console.warn('Active tab not found')
+        cosmeticBlockingEnabled = true
+      } else {
+        cosmeticBlockingEnabled = tabData.braveShields === 'allow' && tabData.cosmeticBlocking === 'block'
+      }
+      if (cosmeticBlockingEnabled) {
+        applyAdblockCosmeticFilters(action.tabId, action.hostname)
+      }
     }
   }
 

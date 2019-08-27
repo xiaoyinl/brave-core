@@ -31,7 +31,18 @@ export interface AllCosmeticFiltersRemoved {
   (): AllCosmeticFiltersRemovedReturn
 }
 
+interface PageContentReadyForInjectionReturn {
+  type: types.PAGE_CONTENT_READY_FOR_INJECTION,
+  tabId: number,
+  hostname: string,
+}
+
+export interface PageContentReadyForInjection {
+  (tabId: number, hostname: string): PageContentReadyForInjectionReturn
+}
+
 export type cosmeticFilterActions =
   SiteCosmeticFilterRemovedReturn |
   SiteCosmeticFilterAddedReturn |
-  AllCosmeticFiltersRemovedReturn
+  AllCosmeticFiltersRemovedReturn |
+  PageContentReadyForInjectionReturn

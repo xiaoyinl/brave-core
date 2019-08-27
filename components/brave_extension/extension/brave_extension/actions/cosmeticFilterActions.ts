@@ -25,3 +25,11 @@ export const allCosmeticFiltersRemoved: actions.AllCosmeticFiltersRemoved = () =
     type: types.ALL_COSMETIC_FILTERS_REMOVED
   }
 }
+
+export const pageContentReadyForInjection: actions.PageContentReadyForInjection = (tabId: number, hostname: string) => {
+  return {
+    type: types.PAGE_CONTENT_READY_FOR_INJECTION,
+    tabId,
+    hostname
+  }
+}

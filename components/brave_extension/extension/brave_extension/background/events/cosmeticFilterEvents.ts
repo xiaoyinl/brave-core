@@ -1,5 +1,6 @@
 import cosmeticFilterActions from '../actions/cosmeticFilterActions'
 import { getLocale } from '../api/localeAPI'
+import { getHostname } from '../../helpers/urlUtils'
 
 export let rule = {
   host: '',
@@ -54,6 +55,22 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         })
       })
       break
+    }
+    case 'pageContentReadyForInjection': {
+      const tab = sender.tab
+      if (tab === undefined) {
+        break
+      }
+      const tabId = tab.id
+      if (tabId === undefined) {
+        break
+      }
+      const url = tab.url
+      if (url === undefined) {
+        break
+      }
+      const hostname = getHostname(url)
+      cosmeticFilterActions.pageContentReadyForInjection(tabId, hostname)
     }
   }
 })
