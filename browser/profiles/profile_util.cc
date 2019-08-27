@@ -41,6 +41,7 @@ bool IsGuestProfile(Profile* profile) {
 
 Profile* GetTorParentProfile(content::BrowserContext* context) {
   DCHECK(context);
+  DCHECK(IsTorProfile(context));
   Profile* profile = static_cast<Profile*>(context)->GetOriginalProfile();
   return static_cast<BraveProfileImpl*>(profile)->GetParentProfile();
 }
@@ -53,6 +54,11 @@ Profile* GetTorParentProfile(base::FilePath path) {
 
   base::FilePath parent_profile_path = path.DirName().DirName();
   return profile_manager->GetProfileByPath(parent_profile_path);
+}
+
+ProfileKey* GetTorParentProfileKey(base::FilePath path) {
+  DCHECK(IsTorProfile(path));
+  return GetTorParentProfile(path)->GetProfileKey();
 }
 
 }  // namespace brave
