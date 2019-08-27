@@ -1,0 +1,12 @@
+diff --git a/chrome/browser/extensions/user_script_listener.cc b/chrome/browser/extensions/user_script_listener.cc
+index 30fe8a252c41f9de93ffcfe6f43d790f593f0892..f5a754ed1a0e8ecb6b9b1691fe91eb4896b54d8e 100644
+--- a/chrome/browser/extensions/user_script_listener.cc
++++ b/chrome/browser/extensions/user_script_listener.cc
+@@ -219,6 +219,7 @@ void UserScriptListener::Observe(int type,
+ 
+   switch (type) {
+     case chrome::NOTIFICATION_PROFILE_ADDED: {
++      BRAVE_IGNORE_TOR_PROFILE_ADDED_
+       auto* registry =
+           ExtensionRegistry::Get(content::Source<Profile>(source).ptr());
+       DCHECK(!extension_registry_observer_.IsObserving(registry));
