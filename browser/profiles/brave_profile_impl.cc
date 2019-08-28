@@ -14,7 +14,6 @@ BraveProfileImpl::BraveProfileImpl(
     CreateMode create_mode,
     scoped_refptr<base::SequencedTaskRunner> io_task_runner)
     : ProfileImpl(path, delegate, create_mode, io_task_runner),
-      parent_profile_(nullptr),
       weak_ptr_factory_(this) {
   // In Tor profile, prefs are created from the original profile like how
   // incognito profile works. By the time chromium start to observe prefs
@@ -42,17 +41,6 @@ bool BraveProfileImpl::IsSameProfile(Profile* profile) {
   }
 
   return ProfileImpl::IsSameProfile(profile);
-}
-
-Profile* BraveProfileImpl::GetParentProfile() {
-  if (!brave::IsTorProfile(this))
-    return this;
-
-  if (!parent_profile_) {
-    parent_profile_ = brave::GetTorParentProfile(GetPath());
-  }
-
-  return parent_profile_;
 }
 
 PrefStore* BraveProfileImpl::CreateExtensionPrefStore(

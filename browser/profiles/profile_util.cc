@@ -6,11 +6,11 @@
 #include "brave/browser/profiles/profile_util.h"
 
 #include "base/files/file_path.h"
-#include "brave/browser/profiles/brave_profile_impl.h"
 #include "brave/browser/tor/buildflags.h"
 #include "brave/common/tor/tor_constants.h"
 #include "chrome/browser/browser_process.h"
 #include "chrome/browser/profiles/profile.h"
+#include "chrome/browser/profiles/profile_impl.h"
 #include "chrome/browser/profiles/profile_manager.h"
 #include "components/prefs/pref_service.h"
 
@@ -43,7 +43,7 @@ Profile* GetTorParentProfile(content::BrowserContext* context) {
   DCHECK(context);
   DCHECK(IsTorProfile(context));
   Profile* profile = static_cast<Profile*>(context)->GetOriginalProfile();
-  return static_cast<BraveProfileImpl*>(profile)->GetParentProfile();
+  return static_cast<ProfileImpl*>(profile)->GetParentProfile();
 }
 
 Profile* GetTorParentProfile(base::FilePath path) {
@@ -53,7 +53,11 @@ Profile* GetTorParentProfile(base::FilePath path) {
   DCHECK(profile_manager);
 
   base::FilePath parent_profile_path = path.DirName().DirName();
-  return profile_manager->GetProfileByPath(parent_profile_path);
+  Profile* parent_profile =
+      profile_manager->GetProfileByPath(parent_profile_path);
+  DCHECK(parent_profile);
+
+  return parent_profile;
 }
 
 ProfileKey* GetTorParentProfileKey(base::FilePath path) {

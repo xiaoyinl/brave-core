@@ -23,10 +23,6 @@ class BraveProfileImpl : public ProfileImpl {
 
   bool IsSameProfile(Profile* profile) override;
 
-  // Return the parent profile which used to create Tor profile. This method
-  // returns this if the profile is not Tor profile.
-  Profile* GetParentProfile();
-
   // We need to access chromium's Profile::CreateExtensionPrefStore which is a
   // protected method from pref_service_builder_utils.cc when creating prefs
   // for Tor profile. Instead of patching profile.h directly, we define this
@@ -35,7 +31,6 @@ class BraveProfileImpl : public ProfileImpl {
                                              bool incognito_pref_store);
 
  private:
-  Profile* parent_profile_;
   base::WeakPtrFactory<BraveProfileImpl> weak_ptr_factory_;
 
   DISALLOW_COPY_AND_ASSIGN(BraveProfileImpl);
