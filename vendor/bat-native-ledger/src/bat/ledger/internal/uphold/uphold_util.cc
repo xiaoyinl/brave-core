@@ -4,6 +4,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include <utility>
+#include <bat/ledger/ledger.h>
 
 #include "base/base64.h"
 #include "base/strings/string_number_conversions.h"
@@ -15,26 +16,26 @@
 namespace braveledger_uphold {
 
 std::string GetClientId() {
-  return ledger::is_production
+  return ledger::_environment == ledger::Environment::PRODUCTION
       ? kClientIdProduction
       : kClientIdStaging;
 }
 
 std::string GetClientSecret() {
-  return ledger::is_production
+  return ledger::_environment == ledger::Environment::PRODUCTION
       ? kClientSecretProduction
       : kClientSecretStaging;
 }
 
 std::string GetUrl() {
-  return ledger::is_production
+  return ledger::_environment == ledger::Environment::PRODUCTION
       ? kUrlProduction
       : kUrlStaging;
 }
 
 std::string GetAPIUrl(const std::string& path) {
   std::string url;
-  if (ledger::is_production) {
+  if (ledger::_environment == ledger::Environment::PRODUCTION) {
     url = kAPIUrlProduction;
   } else {
     url = kAPIUrlStaging;
@@ -44,7 +45,7 @@ std::string GetAPIUrl(const std::string& path) {
 }
 
 std::string GetFeeAddress() {
-  return ledger::is_production
+  return ledger::_environment == ledger::Environment::PRODUCTION
       ? kFeeAddressProduction
       : kFeeAddressStaging;
 }

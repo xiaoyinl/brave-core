@@ -68,7 +68,7 @@ class PublisherInfoDatabase;
 class RewardsNotificationServiceImpl;
 class BraveRewardsBrowserTest;
 
-using GetProductionCallback = base::Callback<void(bool)>;
+using GetEnvironmentCallback = base::Callback<void(ledger::Environment)>;
 using GetDebugCallback = base::Callback<void(bool)>;
 using GetReconcileTimeCallback = base::Callback<void(int32_t)>;
 using GetShortRetriesCallback = base::Callback<void(bool)>;
@@ -189,8 +189,8 @@ class RewardsServiceImpl : public RewardsService,
       GetRewardsInternalsInfoCallback callback) override;
 
   void HandleFlags(const std::string& options);
-  void SetProduction(bool production);
-  void GetProduction(const GetProductionCallback& callback);
+  void SetEnvironment(ledger::Environment environment);
+  void GetEnvironment(const GetEnvironmentCallback& callback);
   void SetDebug(bool debug);
   void GetDebug(const GetDebugCallback& callback);
   void SetReconcileTime(int32_t time);
