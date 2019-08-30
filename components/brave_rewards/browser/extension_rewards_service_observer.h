@@ -52,7 +52,7 @@ class ExtensionRewardsServiceObserver : public RewardsServiceObserver,
   void OnReconcileComplete(RewardsService* rewards_service,
                            unsigned int result,
                            const std::string& viewing_id,
-                           int32_t category,
+                           int32_t type,
                            const std::string& probi) override;
 
   void OnDisconnectWallet(

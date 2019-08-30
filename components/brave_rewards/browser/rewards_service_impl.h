@@ -29,7 +29,6 @@
 #include "mojo/public/cpp/bindings/associated_binding.h"
 #include "brave/components/brave_rewards/browser/balance_report.h"
 #include "brave/components/brave_rewards/browser/content_site.h"
-#include "brave/components/brave_rewards/browser/contribution_info.h"
 #include "ui/gfx/image/image.h"
 #include "brave/components/brave_rewards/browser/publisher_banner.h"
 #include "brave/components/brave_rewards/browser/rewards_service_private_observer.h"
@@ -344,7 +343,7 @@ class RewardsServiceImpl : public RewardsService,
              int amount,
              bool recurring,
              ledger::PublisherInfoPtr publisher_info);
-  void OnContributionInfoSaved(const ledger::REWARDS_CATEGORY category,
+  void OnContributionInfoSaved(const ledger::REWARDS_TYPE type,
                                bool success);
   void OnRecurringTipSaved(
       ledger::SaveRecurringTipCallback callback,
@@ -477,7 +476,7 @@ class RewardsServiceImpl : public RewardsService,
                       std::vector<ledger::GrantPtr> grants) override;
   void OnReconcileComplete(ledger::Result result,
                            const std::string& viewing_id,
-                           ledger::REWARDS_CATEGORY category,
+                           ledger::REWARDS_TYPE type,
                            const std::string& probi) override;
   void OnGrantFinish(ledger::Result result,
                      ledger::GrantPtr grant) override;
@@ -543,7 +542,7 @@ class RewardsServiceImpl : public RewardsService,
                             const int year,
                             const uint32_t date,
                             const std::string& publisher_key,
-                            const ledger::REWARDS_CATEGORY category) override;
+                            const ledger::REWARDS_TYPE type) override;
   void SaveRecurringTip(
       ledger::ContributionInfoPtr info,
       ledger::SaveRecurringTipCallback callback) override;

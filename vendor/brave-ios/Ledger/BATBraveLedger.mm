@@ -647,25 +647,25 @@ BATLedgerReadonlyBridge(double, defaultContributionAmount, GetDefaultContributio
 
 #pragma mark - Reconcile
 
-- (void)onReconcileComplete:(ledger::Result)result viewingId:(const std::string &)viewing_id category:(ledger::REWARDS_CATEGORY)category probi:(const std::string &)probi
+- (void)onReconcileComplete:(ledger::Result)result viewingId:(const std::string &)viewing_id category:(ledger::REWARDS_TYPE)category probi:(const std::string &)probi
 {
   if (result == ledger::Result::LEDGER_OK) {
     const auto now = [NSDate date];
     const auto nowTimestamp = [now timeIntervalSince1970];
 
-    if (category == ledger::REWARDS_CATEGORY::RECURRING_TIP) {
+    if (type == ledger::REWARDS_TYPE::RECURRING_TIP) {
       [self showTipsProcessedNotificationIfNeccessary];
     }
 
     ledger->OnReconcileCompleteSuccess(viewing_id,
-                                       category,
+                                       type,
                                        probi,
                                        BATGetPublisherMonth(now),
                                        BATGetPublisherYear(now),
                                        nowTimestamp);
   }
 
-  if ((result == ledger::Result::LEDGER_OK && category == ledger::REWARDS_CATEGORY::AUTO_CONTRIBUTE) ||
+  if ((result == ledger::Result::LEDGER_OK && category == ledger::REWARDS_TYPE::AUTO_CONTRIBUTE) ||
       result == ledger::Result::LEDGER_ERROR ||
       result == ledger::Result::NOT_ENOUGH_FUNDS ||
       result == ledger::Result::TIP_ERROR) {
@@ -1542,7 +1542,7 @@ BATLedgerBridge(BOOL,
   }
 }
 
-- (void)saveContributionInfo:(const std::string &)probi month:(const int)month year:(const int)year date:(const uint32_t)date publisherKey:(const std::string &)publisher_key category:(const ledger::REWARDS_CATEGORY)category
+- (void)saveContributionInfo:(const std::string &)probi month:(const int)month year:(const int)year date:(const uint32_t)date publisherKey:(const std::string &)publisher_key category:(const ledger::REWARDS_TYPE)category
 {
   [BATLedgerDatabase insertContributionInfo:[NSString stringWithUTF8String:probi.c_str()]
                                       month:month

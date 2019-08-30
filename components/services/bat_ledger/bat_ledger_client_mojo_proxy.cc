@@ -18,8 +18,8 @@ namespace bat_ledger {
 namespace {
 
 
-int32_t ToMojomPublisherCategory(ledger::REWARDS_CATEGORY category) {
-  return (int32_t)category;
+int32_t ToMojomPublisherType(ledger::REWARDS_TYPE type) {
+  return (int32_t)type;
 }
 
 int32_t ToMojomMethod(ledger::URL_METHOD method) {
@@ -153,7 +153,7 @@ void BatLedgerClientMojoProxy::OnRecoverWallet(
 
 void BatLedgerClientMojoProxy::OnReconcileComplete(ledger::Result result,
     const std::string& viewing_id,
-    ledger::REWARDS_CATEGORY category,
+    ledger::REWARDS_TYPE type,
     const std::string& probi) {
   if (!Connected())
     return;
@@ -161,7 +161,7 @@ void BatLedgerClientMojoProxy::OnReconcileComplete(ledger::Result result,
   bat_ledger_client_->OnReconcileComplete(
       result,
       viewing_id,
-      ToMojomPublisherCategory(category),
+      ToMojomPublisherType(type),
       probi);
 }
 
@@ -477,12 +477,12 @@ void BatLedgerClientMojoProxy::SaveContributionInfo(const std::string& probi,
     const int year,
     const uint32_t date,
     const std::string& publisher_key,
-    const ledger::REWARDS_CATEGORY category) {
+    const ledger::REWARDS_TYPE type) {
   if (!Connected())
     return;
 
   bat_ledger_client_->SaveContributionInfo(probi, month, year, date,
-      publisher_key, ToMojomPublisherCategory(category));
+      publisher_key, ToMojomPublisherType(type));
 }
 
 void BatLedgerClientMojoProxy::SaveMediaPublisherInfo(
