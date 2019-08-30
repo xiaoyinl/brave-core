@@ -54,6 +54,7 @@ index e4909a9b80ed30510843b72f0ede108d500f6ac3..ba5db62479f3edab9af6887a2be8e8ca
 +    const GURL& url,
 +    const GURL& site_for_cookies,
 +    const base::Optional<url::Origin>& top_frame_origin) const {
++  BRAVE_IS_COOKIE_ACCESS_ALLOWED
 +  // TODO(crbug.com/988398): top_frame_origin is not yet always available.
 +  // Ensure that the DCHECK always passes and remove the FeatureList check.
 +  if (!base::FeatureList::IsEnabled(kImprovedCookieControls))
