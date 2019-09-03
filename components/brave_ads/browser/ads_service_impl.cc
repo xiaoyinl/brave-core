@@ -936,7 +936,11 @@ bool AdsServiceImpl::IsUpgradingFromPreBraveAdsBuild() {
   // has run for this user
 
   return GetBooleanPref(prefs::kEnabled) && !PrefExists(prefs::kIdleThreshold)
-      && !PrefExists(prefs::kVersion) && !first_run::IsChromeFirstRun();
+      && !PrefExists(prefs::kVersion)
+#if !defined(OS_ANDROID)
+      && !first_run::IsChromeFirstRun()
+#endif
+      ;
 }
 
 void AdsServiceImpl::DisableAdsIfUpgradingFromPreBraveAdsBuild() {
