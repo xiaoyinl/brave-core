@@ -37,6 +37,7 @@ extern const char kReferralCheckedForPromoCodeFile[];
 extern const char kHTTPSEVerywhereControlType[];
 extern const char kNoScriptControlType[];
 extern const char kShieldsAdvancedViewEnabled[];
+extern const char kCosmeticFilteringControlType[];
 extern const char kAdControlType[];
 extern const char kFBEmbedControlType[];
 extern const char kTwitterEmbedControlType[];
