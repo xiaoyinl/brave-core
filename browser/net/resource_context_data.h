@@ -73,8 +73,13 @@ class ResourceContextData : public base::SupportsUserData::Data {
       int frame_tree_node_id,
       const url::Origin& origin);
 
+  static ResourceContextData* GetResourceContextDataForBrowserContext(
+      content::BrowserContext* browser_context);
+
   void RemoveProxy(BraveProxyingURLLoaderFactory* proxy);
   void RemoveProxyWebSocket(BraveProxyingWebSocket* proxy);
+
+  BraveRequestHandler* request_handler() { return request_handler_.get(); }
 
  private:
   ResourceContextData();

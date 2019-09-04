@@ -188,7 +188,10 @@ source_set("browser_process") {
   }
 
   if (enable_extensions) {
-    deps += [ "extensions" ]
+    deps += [ 
+      "extensions",
+      "//brave/extensions/browser/api/web_request",
+    ]
   }
 
   if (brave_ads_enabled) {

@@ -1,0 +1,28 @@
+diff --git a/extensions/browser/api/web_request/web_request_proxying_websocket.h b/extensions/browser/api/web_request/web_request_proxying_websocket.h
+index fe5e2d4bcf7c73edeb3ae65cc8604ebb2e3132f5..87fcba1133bbe892343b1c42e88f3ed037136b04 100644
+--- a/extensions/browser/api/web_request/web_request_proxying_websocket.h
++++ b/extensions/browser/api/web_request/web_request_proxying_websocket.h
+@@ -26,6 +26,7 @@
+ #include "url/gurl.h"
+ #include "url/origin.h"
+ 
++class BraveWebRequestProxyingWebSocket;
+ namespace net {
+ class IPEndPoint;
+ }  // namespace net
+@@ -93,12 +94,15 @@ class WebRequestProxyingWebSocket
+       WebRequestAPI::ProxySet* proxies);
+ 
+  private:
++  friend class ::BraveWebRequestProxyingWebSocket;
++  virtual
+   void OnBeforeRequestComplete(int error_code);
+   void OnBeforeSendHeadersComplete(const std::set<std::string>& removed_headers,
+                                    const std::set<std::string>& set_headers,
+                                    int error_code);
+   void ContinueToStartRequest(int error_code);
+   void OnHeadersReceivedComplete(int error_code);
++  virtual
+   void ContinueToHeadersReceived();
+   void OnAuthRequiredComplete(net::NetworkDelegate::AuthRequiredResponse rv);
+   void OnHeadersReceivedCompleteForAuth(const net::AuthChallengeInfo& auth_info,

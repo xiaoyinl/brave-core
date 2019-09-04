@@ -253,25 +253,19 @@ void BraveContentBrowserClient::CreateWebSocket(
     const GURL& site_for_cookies,
     const base::Optional<std::string>& user_agent,
     network::mojom::WebSocketHandshakeClientPtr handshake_client) {
-  auto* proxy = BraveProxyingWebSocket::ProxyWebSocket(
-      frame,
-      std::move(factory),
-      url,
-      site_for_cookies,
-      user_agent,
-      std::move(handshake_client));
-
-  if (ChromeContentBrowserClient::WillInterceptWebSocket(frame)) {
-    ChromeContentBrowserClient::CreateWebSocket(
-        frame,
-        proxy->web_socket_factory(),
-        url,
-        site_for_cookies,
-        user_agent,
-        network::mojom::WebSocketHandshakeClientPtr(proxy->handshake_client()));
-  } else {
-    proxy->Start();
-  }
+#if BUILDFLAG(ENABLE_EXTENSIONS)
+  // For platforms where extensions are enabled we subclass
+  // WebRequestProxyingWebSocket since there's no way to add a second proxy.
+  ChromeContentBrowserClient::CreateWebSocket(frame, std::move(factory), url,
+                                              site_for_cookies, user_agent,
+                                              std::move(handshake_client));
+#else
+  // For platforms where extensions are disabled we can add our own proxy since
+  // WebRequestProxyingWebSocket isn't in play.
+  BraveProxyingWebSocket::ProxyWebSocket(frame, std::move(factory), url,
+                                         site_for_cookies, user_agent,
+                                         std::move(handshake_client));
+#endif
 }
 
 void BraveContentBrowserClient::MaybeHideReferrer(

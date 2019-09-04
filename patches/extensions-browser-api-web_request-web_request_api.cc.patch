@@ -1,8 +1,16 @@
 diff --git a/extensions/browser/api/web_request/web_request_api.cc b/extensions/browser/api/web_request/web_request_api.cc
-index b83d047e7fdb2391dd74cfd30c8b003455e8e8c3..d7a4053f866accc0de1ea3ec52541f766ab22847 100644
+index b83d047e7fdb2391dd74cfd30c8b003455e8e8c3..d8827c15268e11c149365ea16e690864ea52d0f0 100644
 --- a/extensions/browser/api/web_request/web_request_api.cc
 +++ b/extensions/browser/api/web_request/web_request_api.cc
-@@ -1243,6 +1243,9 @@ ExtensionWebRequestEventRouter::OnAuthRequired(
+@@ -747,6 +747,7 @@ void WebRequestAPI::ProxyWebSocket(
+           frame->GetProcess()->GetBrowserContext());
+ 
+   WebRequestProxyingWebSocket::StartProxying(
++      frame->GetFrameTreeNodeId(),
+       std::move(factory), url, site_for_cookies, user_agent,
+       handshake_client.PassInterface(), has_extra_headers,
+       frame->GetProcess()->GetID(), frame->GetRoutingID(),
+@@ -1243,6 +1244,9 @@ ExtensionWebRequestEventRouter::OnAuthRequired(
      const net::AuthChallengeInfo& auth_info,
      net::NetworkDelegate::AuthCallback callback,
      net::AuthCredentials* credentials) {

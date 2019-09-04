@@ -24,6 +24,26 @@ ResourceContextData::ResourceContextData()
 ResourceContextData::~ResourceContextData() = default;
 
 // static
+ResourceContextData*
+ResourceContextData::GetResourceContextDataForBrowserContext(
+    content::BrowserContext* browser_context) {
+  DCHECK_CURRENTLY_ON(content::BrowserThread::UI);
+  auto* self = static_cast<ResourceContextData*>(
+      browser_context->GetUserData(kResourceContextUserDataKey));
+  if (!self) {
+    self = new ResourceContextData();
+    browser_context->SetUserData(kResourceContextUserDataKey,
+                                 base::WrapUnique(self));
+  }
+
+  if (!self->request_handler_) {
+    self->request_handler_.reset(new BraveRequestHandler);
+  }
+
+  return self;
+}
+
+// static
 void ResourceContextData::StartProxying(
     content::BrowserContext* browser_context,
     int render_process_id,
@@ -32,17 +52,7 @@ void ResourceContextData::StartProxying(
     network::mojom::URLLoaderFactoryPtrInfo target_factory) {
   DCHECK_CURRENTLY_ON(content::BrowserThread::UI);
 
-  auto* self = static_cast<ResourceContextData*>(
-      browser_context->GetUserData(kResourceContextUserDataKey));
-  if (!self) {
-    self = new ResourceContextData();
-    browser_context->SetUserData(kResourceContextUserDataKey,
-                                  base::WrapUnique(self));
-  }
-
-  if (!self->request_handler_) {
-    self->request_handler_.reset(new BraveRequestHandler);
-  }
+  auto* self = GetResourceContextDataForBrowserContext(browser_context);
 
   auto proxy = std::make_unique<BraveProxyingURLLoaderFactory>(
       self->request_handler_.get(), browser_context, render_process_id,
@@ -68,17 +78,7 @@ BraveProxyingWebSocket* ResourceContextData::StartProxyingWebSocket(
     const url::Origin& origin) {
   DCHECK_CURRENTLY_ON(content::BrowserThread::UI);
 
-  auto* self = static_cast<ResourceContextData*>(
-      browser_context->GetUserData(kResourceContextUserDataKey));
-  if (!self) {
-    self = new ResourceContextData();
-    browser_context->SetUserData(kResourceContextUserDataKey,
-                                  base::WrapUnique(self));
-  }
-
-  if (!self->request_handler_) {
-    self->request_handler_.reset(new BraveRequestHandler);
-  }
+  auto* self = GetResourceContextDataForBrowserContext(browser_context);
 
   network::ResourceRequest request;
   request.url = url;
@@ -116,4 +116,3 @@ void ResourceContextData::RemoveProxyWebSocket(BraveProxyingWebSocket* proxy) {
   DCHECK(it != websocket_proxies_.end());
   websocket_proxies_.erase(it);
 }
-
