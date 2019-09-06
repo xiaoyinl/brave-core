@@ -17,7 +17,7 @@ struct PublisherInfo {
   uint32 percent;
   double weight;
   int32 excluded;
-  int32 category;
+  int32 type;
   uint64 reconcile_stamp;
   PublisherStatus status = PublisherStatus.NOT_VERIFIED;
   string name;
@@ -46,12 +46,12 @@ struct PendingContribution {
   double amount;
   uint64 added_date;
   string viewing_id;
-  int32 category;
+  int32 type;
 };
 
 struct PendingContributionInfo {
   string publisher_key;
-  int32 category;
+  int32 type;
   PublisherStatus status = PublisherStatus.NOT_VERIFIED;
   string name;
   string url;

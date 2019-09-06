@@ -1146,7 +1146,7 @@ CURRENT_RECONCILE::CURRENT_RECONCILE(const CURRENT_RECONCILE& data):
   currency_(data.currency_),
   fee_(data.fee_),
   directions_(data.directions_),
-  category_(data.category_),
+  type_(data.type_),
   list_(data.list_),
   retry_step_(data.retry_step_),
   retry_level_(data.retry_level_),
@@ -1177,7 +1177,7 @@ bool CURRENT_RECONCILE::loadFromJson(const std::string & json) {
     amount_ = d["amount"].GetString();
     currency_ = d["currency"].GetString();
     fee_ = d["fee"].GetDouble();
-    category_ = d["category"].GetInt();
+    type_ = d["category"].GetInt();
 
     if (d.HasMember("surveyorInfo") && d["surveyorInfo"].IsObject()) {
       auto obj = d["surveyorInfo"].GetObject();
@@ -1281,7 +1281,7 @@ void saveToJson(JsonWriter* writer, const CURRENT_RECONCILE& data) {
   writer->Double(data.fee_);
 
   writer->String("category");
-  writer->Int(data.category_);
+  writer->Int(data.type_);
 
   writer->String("rates");
   writer->StartObject();

@@ -126,7 +126,7 @@ bool PublisherInfoDatabase::CreateContributionInfoTable() {
       "publisher_id LONGVARCHAR,"
       "probi TEXT \"0\"  NOT NULL,"
       "date INTEGER NOT NULL,"
-      "category INTEGER NOT NULL,"
+      "type INTEGER NOT NULL,"
       "month INTEGER NOT NULL,"
       "year INTEGER NOT NULL,"
       "CONSTRAINT fk_contribution_info_publisher_id"
@@ -159,13 +159,13 @@ bool PublisherInfoDatabase::InsertContributionInfo(
   sql::Statement statement(GetDB().GetCachedStatement(SQL_FROM_HERE,
       "INSERT INTO contribution_info "
       "(publisher_id, probi, date, "
-      "category, month, year) "
+      "type, month, year) "
       "VALUES (?, ?, ?, ?, ?, ?)"));
 
   statement.BindString(0, info.publisher_key);
   statement.BindString(1, info.probi);
   statement.BindInt64(2, info.date);
-  statement.BindInt(3, info.category);
+  statement.BindInt(3, info.type);
   statement.BindInt(4, info.month);
   statement.BindInt(5, info.year);
 
@@ -191,11 +191,11 @@ void PublisherInfoDatabase::GetOneTimeTips(ledger::PublisherInfoList* list,
       "INNER JOIN publisher_info AS pi ON ci.publisher_id = pi.publisher_id "
       "LEFT JOIN server_publisher_info AS spi "
       "ON spi.publisher_key = pi.publisher_id "
-      "WHERE ci.month = ? AND ci.year = ? AND ci.category = ?"));
+      "WHERE ci.month = ? AND ci.year = ? AND ci.type = ?"));
 
   info_sql.BindInt(0, month);
   info_sql.BindInt(1, year);
-  info_sql.BindInt(2, ledger::REWARDS_CATEGORY::ONE_TIME_TIP);
+  info_sql.BindInt(2, ledger::REWARDS_TYPE::ONE_TIME_TIP);
 
   while (info_sql.Step()) {
     auto publisher = ledger::PublisherInfo::New();
@@ -942,7 +942,7 @@ bool PublisherInfoDatabase::CreatePendingContributionsTable() {
       "amount DOUBLE DEFAULT 0 NOT NULL,"
       "added_date INTEGER DEFAULT 0 NOT NULL,"
       "viewing_id LONGVARCHAR NOT NULL,"
-      "category INTEGER NOT NULL,"
+      "type INTEGER NOT NULL,"
       "CONSTRAINT fk_pending_contribution_publisher_id"
       "    FOREIGN KEY (publisher_id)"
       "    REFERENCES publisher_info (publisher_id)"
@@ -980,14 +980,14 @@ bool PublisherInfoDatabase::InsertPendingContribution
   for (const auto& item : list) {
     sql::Statement statement(GetDB().GetCachedStatement(SQL_FROM_HERE,
       "INSERT INTO pending_contribution "
-      "(publisher_id, amount, added_date, viewing_id, category) "
+      "(publisher_id, amount, added_date, viewing_id, type) "
       "VALUES (?, ?, ?, ?, ?)"));
 
     statement.BindString(0, item->publisher_key);
     statement.BindDouble(1, item->amount);
     statement.BindInt64(2, now_seconds);
     statement.BindString(3, item->viewing_id);
-    statement.BindInt(4, item->category);
+    statement.BindInt(4, item->type);
     statement.Run();
   }
 
@@ -1030,7 +1030,7 @@ void PublisherInfoDatabase::GetPendingContributions(
   sql::Statement info_sql(db_.GetUniqueStatement(
       "SELECT pi.publisher_id, pi.name, pi.url, pi.favIcon, "
       "spi.status, pi.provider, pc.amount, pc.added_date, "
-      "pc.viewing_id, pc.category "
+      "pc.viewing_id, pc.type "
       "FROM pending_contribution as pc "
       "INNER JOIN publisher_info AS pi ON pc.publisher_id = pi.publisher_id "
       "LEFT JOIN server_publisher_info AS spi "
@@ -1048,8 +1048,7 @@ void PublisherInfoDatabase::GetPendingContributions(
     info->amount = info_sql.ColumnDouble(6);
     info->added_date = info_sql.ColumnInt64(7);
     info->viewing_id = info_sql.ColumnString(8);
-    info->category =
-        static_cast<ledger::REWARDS_CATEGORY>(info_sql.ColumnInt(9));
+    info->type = static_cast<ledger::REWARDS_TYPE>(info_sql.ColumnInt(9));
 
     list->push_back(std::move(info));
   }
@@ -1219,7 +1218,7 @@ bool PublisherInfoDatabase::MigrateV1toV2() {
       "publisher_id LONGVARCHAR,"
       "probi TEXT \"0\"  NOT NULL,"
       "date INTEGER NOT NULL,"
-      "category INTEGER NOT NULL,"
+      "type INTEGER NOT NULL,"
       "month INTEGER NOT NULL,"
       "year INTEGER NOT NULL,"
       "CONSTRAINT fk_contribution_info_publisher_id"
@@ -1292,7 +1291,7 @@ bool PublisherInfoDatabase::MigrateV2toV3() {
       "amount DOUBLE DEFAULT 0 NOT NULL,"
       "added_date INTEGER DEFAULT 0 NOT NULL,"
       "viewing_id LONGVARCHAR NOT NULL,"
-      "category INTEGER NOT NULL,"
+      "type INTEGER NOT NULL,"
       "CONSTRAINT fk_pending_contribution_publisher_id"
       "    FOREIGN KEY (publisher_id)"
       "    REFERENCES publisher_info (publisher_id)"

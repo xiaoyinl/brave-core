@@ -48,7 +48,7 @@ typedef void (^BATLedgerDatabaseWriteCompletion)(BOOL success);
                           year:(const int)year
                           date:(const uint32_t)date
                   publisherKey:(NSString *)publisherKey
-                      category:(BATRewardsCategory)category
+                          type:(BATRewardsType)type
                     completion:(nullable BATLedgerDatabaseWriteCompletion)completion;
 
 /// Get a list of publishers you have supported with one time tips given some month and year

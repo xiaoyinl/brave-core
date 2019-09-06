@@ -16,7 +16,7 @@ namespace brave_rewards {
     std::string probi;
     int month;
     int year;
-    int category;
+    int type;
     uint32_t date = 0;
     std::string publisher_key;
   };

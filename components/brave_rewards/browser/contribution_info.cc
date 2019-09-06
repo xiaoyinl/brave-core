@@ -15,7 +15,7 @@ namespace brave_rewards {
     probi = data.probi;
     month = data.month;
     year = data.year;
-    category = data.category;
+    type = data.type;
     date = data.date;
     publisher_key = data.publisher_key;
   }

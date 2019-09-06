@@ -36,12 +36,12 @@ typedef NS_ENUM(NSInteger, BATPublisherExclude) {
   BATPublisherExcludeIncluded = 2
 } NS_SWIFT_NAME(PublisherExclude);
 
-typedef NS_ENUM(NSInteger, BATRewardsCategory) {
-  BATRewardsCategoryAutoContribute = 2,
-  BATRewardsCategoryOneTimeTip = 8,
-  BATRewardsCategoryRecurringTip = 16,
-  BATRewardsCategoryAllCategories = 31
-} NS_SWIFT_NAME(RewardsCategory);
+typedef NS_ENUM(NSInteger, BATRewardsType) {
+  BATRewardsTypeAutoContribute = 2,
+  BATRewardsTypeOneTimeTip = 8,
+  BATRewardsTypeRecurringTip = 16,
+  BATRewardsTypeAllCategories = 31
+} NS_SWIFT_NAME(RewardsType);
 
 typedef NS_ENUM(NSInteger, BATReportType) {
   BATReportTypeGrant = 0,

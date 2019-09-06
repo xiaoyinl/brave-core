@@ -16,8 +16,8 @@ namespace bat_ledger {
 
 namespace {  // TODO(anyone): move into a util class
 
-ledger::REWARDS_CATEGORY ToLedgerPublisherCategory(int32_t category) {
-  return (ledger::REWARDS_CATEGORY)category;
+ledger::REWARDS_TYPE ToLedgerPublisherType(int32_t type) {
+  return (ledger::REWARDS_TYPE)type;
 }
 
 ledger::URL_METHOD ToLedgerURLMethod(int32_t method) {
@@ -157,12 +157,12 @@ void LedgerClientMojoProxy::OnRecoverWallet(
 void LedgerClientMojoProxy::OnReconcileComplete(
     const ledger::Result result,
     const std::string& viewing_id,
-    int32_t category,
+    int32_t type,
     const std::string& probi) {
   ledger_client_->OnReconcileComplete(
       result,
       viewing_id,
-      ToLedgerPublisherCategory(category),
+      ToLedgerPublisherType(type),
       probi);
 }
 
@@ -386,9 +386,9 @@ void LedgerClientMojoProxy::RemoveRecurringTip(const std::string& publisher_key,
 
 void LedgerClientMojoProxy::SaveContributionInfo(const std::string& probi,
     int32_t month, int32_t year, uint32_t date,
-    const std::string& publisher_key, int32_t category) {
+    const std::string& publisher_key, int32_t type) {
   ledger_client_->SaveContributionInfo(probi, month, year, date, publisher_key,
-      ToLedgerPublisherCategory(category));
+      ToLedgerPublisherType(type));
 }
 
 void LedgerClientMojoProxy::SaveMediaPublisherInfo(
