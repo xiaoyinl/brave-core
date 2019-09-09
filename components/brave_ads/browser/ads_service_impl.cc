@@ -603,6 +603,29 @@ void AdsServiceImpl::OnInitialize(
 
   is_initialized_ = true;
 
+  ShowOnboarding();
+}
+
+void AdsServiceImpl::MaybeShowOnboardingReminder() {
+  if (GetBooleanPref(prefs::kEnabled) ||
+      !IsSupportedRegion() ||
+      IsShowingOnboarding()) {
+    return;
+  }
+
+  if (!GetBooleanPref(brave_rewards::prefs::kBraveRewardsEnabled)) {
+    return;
+  }
+
+  ShowOnboarding();
+}
+
+bool AdsServiceImpl::ShouldShowOnboarding() const {
+  auto is_ads_enabled = GetBooleanPref(prefs::kEnabled);
+
+  auto is_rewards_enabled =
+      GetBooleanPref(brave_rewards::prefs::kBraveRewardsEnabled);
+
   MaybeViewAd();
 
   StartCheckIdleStateTimer();
@@ -1464,6 +1487,10 @@ void AdsServiceImpl::MaybeStartRemoveOnboardingTimer() {
 }
 
 bool AdsServiceImpl::ShouldRemoveOnboarding() const {
+  return IsShowingOnboarding();
+}
+
+bool AdsServiceImpl::IsShowingOnboarding() const {
   auto* notification_service = rewards_service_->GetNotificationService();
   return notification_service->Exists(kRewardsNotificationAdsOnboarding);
 }

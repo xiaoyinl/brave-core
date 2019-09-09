@@ -279,11 +279,13 @@ class AdsServiceImpl : public AdsService,
       const uint64_t timestamp_in_seconds) const;
 
   void MaybeShowOnboarding();
+  void MaybeShowOnboardingReminder();
   bool ShouldShowOnboarding() const;
   void ShowOnboarding();
   void RemoveOnboarding();
   void MaybeStartRemoveOnboardingTimer();
   bool ShouldRemoveOnboarding() const;
+  bool OnboardingNotificationExists() const;
   void StartRemoveOnboardingTimer();
   void OnRemoveOnboarding(
       const uint32_t timer_id);
