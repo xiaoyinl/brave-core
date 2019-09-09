@@ -1,0 +1,13 @@
+diff --git a/chrome/browser/push_messaging/push_messaging_service_impl.cc b/chrome/browser/push_messaging/push_messaging_service_impl.cc
+index eeec06df57636d7452669884a5a249680ce68def..d08b9d01daf8413434ec5699c79f0be7ddce1bd0 100644
+--- a/chrome/browser/push_messaging/push_messaging_service_impl.cc
++++ b/chrome/browser/push_messaging/push_messaging_service_impl.cc
+@@ -171,7 +171,7 @@ void PushMessagingServiceImpl::InitializeForProfile(Profile* profile) {
+ 
+   PushMessagingServiceImpl* push_service =
+       PushMessagingServiceFactory::GetForProfile(profile);
+-  push_service->IncreasePushSubscriptionCount(count, false /* is_pending */);
++  if (push_service) { push_service->IncreasePushSubscriptionCount(count, false /* is_pending */); }
+ }
+ 
+ PushMessagingServiceImpl::PushMessagingServiceImpl(Profile* profile)

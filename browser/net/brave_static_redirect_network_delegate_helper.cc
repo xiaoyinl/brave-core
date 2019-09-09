@@ -30,6 +30,7 @@ int OnBeforeURLRequest_StaticRedirectWork(
 int OnBeforeURLRequest_StaticRedirectWorkForGURL(
     const GURL& request_url,
     GURL* new_url) {
+  LOG(INFO) << "URL: " << request_url.spec();
   GURL::Replacements replacements;
   static URLPattern geo_pattern(URLPattern::SCHEME_HTTPS, kGeoLocationsPattern);
   static URLPattern safeBrowsing_pattern(URLPattern::SCHEME_HTTPS,

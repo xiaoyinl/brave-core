@@ -27,7 +27,7 @@ index 491eff1b6aab66e6d4d5edae4b2d7f198031e905..0ae3fe234a22b5d12e1d675792a04d53
          sub-label="$i18n{safeBrowsingEnableProtectionDesc}">
      </settings-toggle-button>
 +    <if expr="not _google_chrome">
-+      <settings-brave-personalization-options></settings-brave-personalization-options>
++      <settings-brave-personalization-options prefs="{{prefs}}"></settings-brave-personalization-options>
 +    </if>
 +    <if expr="_google_chrome">
      <settings-toggle-button
