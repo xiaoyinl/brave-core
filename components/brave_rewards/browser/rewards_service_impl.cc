@@ -2144,10 +2144,11 @@ void RewardsServiceImpl::OnTip(const std::string& publisher_key,
 }
 
 bool SaveContributionInfoOnFileTaskRunner(
-    const brave_rewards::ContributionInfo info,
+    ledger::ContributionInfoPtr info,
   PublisherInfoDatabase* backend) {
-  if (backend && backend->InsertContributionInfo(info))
+  if (backend && backend->InsertOrUpdateContributionInfo(*info)) {
     return true;
+  }
 
   return false;
 }
@@ -2168,8 +2169,6 @@ void RewardsServiceImpl::SaveContributionInfo(const std::string& probi,
     const ledger::REWARDS_TYPE type) {
   brave_rewards::ContributionInfo info;
   info.probi = probi;
-  info.month = month;
-  info.year = year;
   info.date = date;
   info.publisher_key = publisher_key;
   info.type = type;

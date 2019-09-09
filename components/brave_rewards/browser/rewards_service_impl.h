@@ -29,7 +29,6 @@
 #include "mojo/public/cpp/bindings/associated_binding.h"
 #include "brave/components/brave_rewards/browser/balance_report.h"
 #include "brave/components/brave_rewards/browser/content_site.h"
-#include "brave/components/brave_rewards/browser/contribution_info.h"
 #include "ui/gfx/image/image.h"
 #include "brave/components/brave_rewards/browser/publisher_banner.h"
 #include "brave/components/brave_rewards/browser/rewards_service_private_observer.h"

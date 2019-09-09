@@ -26,6 +26,26 @@ using ServerPublisherInfoPtr = mojom::ServerPublisherInfoPtr;
 using ServerPublisherInfoList = std::vector<ServerPublisherInfoPtr>;
 using PublisherStatus = mojom::PublisherStatus;
 
+using ContributionInfo = mojom::ContributionInfo;
+using ContributionInfoPtr = mojom::ContributionInfoPtr;
+
+using ContributionStateInfo = mojom::ContributionStateInfo;
+using ContributionStateInfoPtr = mojom::ContributionStateInfoPtr;
+
+using ExchangeRateInfo = mojom::ExchangeRateInfo;
+using ExchangeRateInfoPtr = mojom::ExchangeRateInfoPtr;
+using ExchangeRateInfoList = std::vector<ExchangeRateInfoPtr>;
+
+using BallotInfo = mojom::BallotInfo;
+using BallotInfoPtr = mojom::BallotInfoPtr;
+using BallotInfoList = std::vector<BallotInfoPtr>;
+
+using ExcludeFilter = mojom::ExcludeFilter;
+using ActivityInfoFilter = mojom::ActivityInfoFilter;
+using ActivityInfoFilterPtr = mojom::ActivityInfoFilterPtr;
+using ActivityInfoFilterOrderPair = mojom::ActivityInfoFilterOrderPair;
+using ActivityInfoFilterOrderPairPtr = mojom::ActivityInfoFilterOrderPairPtr;
+
 const char kClearFavicon[] = "clear";
 const char kIgnorePublisherBlob[] = "ignore";
 
@@ -58,15 +78,6 @@ LEDGER_EXPORT enum PUBLISHER_EXCLUDE {
   EXCLUDED = 1,  // user manually changed it to exclude
   INCLUDED = 2  // user manually changed it to include and is overriding server
 };
-
-using ExcludeFilter = mojom::ExcludeFilter;
-using ActivityInfoFilter = mojom::ActivityInfoFilter;
-using ActivityInfoFilterPtr = mojom::ActivityInfoFilterPtr;
-using ActivityInfoFilterOrderPair = mojom::ActivityInfoFilterOrderPair;
-using ActivityInfoFilterOrderPairPtr = mojom::ActivityInfoFilterOrderPairPtr;
-
-using ContributionInfo = mojom::ContributionInfo;
-using ContributionInfoPtr = mojom::ContributionInfoPtr;
 
 }  // namespace ledger
 

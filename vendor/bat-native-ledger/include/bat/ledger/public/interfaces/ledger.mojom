@@ -4,9 +4,32 @@
 module ledger.mojom;
 
 struct ContributionInfo {
-  string publisher;  // Filled only for recurrent tips
-  double value;
-  uint64 date;
+  string id;
+  int32 type;
+  double amount;
+  string probi;
+  uint32 created_date;
+  uint32 reconciled_date;
+  array<ExchangeRateInfo> exchange_rates;
+  array<BallotInfo> ballots;
+  ContributionStateInfo state;
+};
+
+struct ContributionStateInfo {
+  string anonize_viewing_id;
+  string surveyor_id;
+  string registrar_vk;
+  string master_user_token;
+};
+
+struct ExchangeRateInfo {
+  string currency_code;
+  double rate;
+};
+
+struct BallotInfo {
+  string publisher_key;
+  int32 count;
 };
 
 struct PublisherInfo {

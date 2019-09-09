@@ -5,9 +5,6 @@
 
 #include "brave/components/brave_rewards/browser/database/publisher_info_database.h"
 
-#include <stdint.h>
-
-#include <string>
 #include <utility>
 
 #include "base/bind.h"
@@ -27,7 +24,7 @@ namespace brave_rewards {
 
 namespace {
 
-const int kCurrentVersionNumber = 7;
+const int kCurrentVersionNumber = 8;
 const int kCompatibleVersionNumber = 1;
 
 }  // namespace
@@ -42,6 +39,9 @@ PublisherInfoDatabase::PublisherInfoDatabase(
 
   server_publisher_info_ =
       std::make_unique<DatabaseServerPublisherInfo>(GetCurrentVersion());
+
+  contribution_info_ =
+      std::make_unique<DatabaseContributionInfo>(GetCurrentVersion());
 }
 
 PublisherInfoDatabase::~PublisherInfoDatabase() {
