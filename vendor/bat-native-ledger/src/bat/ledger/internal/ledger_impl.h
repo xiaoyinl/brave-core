@@ -600,8 +600,6 @@ class LedgerImpl : public ledger::Ledger,
     const ledger::PendingContributionInfoList& list,
     ledger::PendingContributionInfoListCallback callback);
 
-  void OnWalletInitialized(ledger::Result result);
-
   // ledger::LedgerCallbacHandler implementation
   void OnPublisherStateLoaded(ledger::Result result,
                               const std::string& data,
