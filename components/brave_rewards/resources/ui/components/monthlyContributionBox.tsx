@@ -6,20 +6,17 @@ import * as React from 'react'
 import { bindActionCreators, Dispatch } from 'redux'
 import { connect } from 'react-redux'
 
-// Components
-import { Checkbox, Grid, Column, ControlWrapper } from 'brave-ui/components'
 import {
   DisabledContent,
   Box,
-  BoxAlert,
   TableDonation,
   List,
   Tokens,
-  ModalDonation
+  ModalDonation,
+  NextContribution
 } from 'brave-ui/features/rewards'
 import { Provider } from 'brave-ui/features/rewards/profile'
 
-// Utils
 import { getLocale } from '../../../../common/locale'
 import * as rewardsActions from '../actions/rewards_actions'
 import * as utils from '../utils'
@@ -30,15 +27,13 @@ interface Props extends Rewards.ComponentProps {
 
 interface State {
   modalShowAll: boolean
-  settings: boolean
 }
 
-class TipBox extends React.Component<Props, State> {
+class MonthlyContributionBox extends React.Component<Props, State> {
   constructor (props: Props) {
     super(props)
     this.state = {
-      modalShowAll: false,
-      settings: false
+      modalShowAll: false
     }
   }
 
@@ -57,22 +52,21 @@ class TipBox extends React.Component<Props, State> {
     )
   }
 
-  getTipsRows = () => {
-    const { balance, tipsList } = this.props.rewardsData
-    let tips: DetailRow[] = []
+  getRows = () => {
+    const { balance, recurringList } = this.props.rewardsData
+    let recurring: DetailRow[] = []
 
-    if (!tipsList) {
-      return tips
+    if (!recurringList) {
+      return recurring
     }
 
-    return tipsList.map((item: Rewards.Publisher) => {
+    return recurringList.map((item: Rewards.Publisher) => {
       let faviconUrl = `chrome://favicon/size/48@1x/${item.url}`
       const verified = utils.isPublisherConnectedOrVerified(item.status)
+
       if (item.favIcon && verified) {
         faviconUrl = `chrome://favicon/size/48@1x/${item.favIcon}`
       }
-
-      const token = utils.convertProbiToFixed(item.percentage.toString())
 
       return {
         profile: {
@@ -82,12 +76,11 @@ class TipBox extends React.Component<Props, State> {
           src: faviconUrl
         },
         contribute: {
-          tokens: token,
-          converted: utils.convertBalance(token, balance.rates)
+          tokens: item.percentage.toFixed(1),
+          converted: utils.convertBalance(item.percentage.toString(), balance.rates)
         },
         url: item.url,
-        text: item.tipDate ? new Date(item.tipDate * 1000).toLocaleDateString() : undefined,
-        type: 'donation' as any,
+        type: 'recurring' as any,
         onRemove: () => { this.actions.removeRecurringTip(item.id) }
       }
     })
@@ -99,103 +92,28 @@ class TipBox extends React.Component<Props, State> {
     })
   }
 
-  doNothing = () => {
-    console.log('Alert closed')
-  }
-
-  importAlert = (walletImported: boolean) => {
-    return (
-      walletImported
-      ? <BoxAlert type={'tips'} onReview={this.doNothing} />
-      : null
-    )
-  }
-
-  onSettingsToggle = () => {
-    this.setState({ settings: !this.state.settings })
-  }
-
-  onInlineTipSettingChange = (key: string, selected: boolean) => {
-    this.actions.onInlineTipSettingChange(key, selected)
-  }
-
-  donationSettingsChild = () => {
-    const { enabledMain } = this.props.rewardsData
-    if (!enabledMain) {
-      return null
-    }
-
-    let value = this.props.rewardsData.inlineTip
-
-    if (!value) {
-      value = {
-        twitter: true,
-        reddit: true,
-        github: true
-      }
-    }
-
-    return (
-      <>
-        <Grid columns={1}>
-          <Column size={1} customStyle={{ justifyContent: 'center', flexWrap: 'wrap' }}>
-            <ControlWrapper text={getLocale('donationAbility')}>
-              <Checkbox
-                value={value}
-                multiple={true}
-                onChange={this.onInlineTipSettingChange}
-              >
-                <div data-key='reddit'>{getLocale('donationAbilityReddit')}</div>
-              </Checkbox>
-              <Checkbox
-                value={value}
-                multiple={true}
-                onChange={this.onInlineTipSettingChange}
-              >
-                <div data-key='twitter'>{getLocale('donationAbilityTwitter')}</div>
-              </Checkbox>
-
-              <Checkbox
-                value={value}
-                multiple={true}
-                onChange={this.onInlineTipSettingChange}
-              >
-                <div data-key='github'>{getLocale('donationAbilityGitHub')}</div>
-              </Checkbox>
-            </ControlWrapper>
-          </Column>
-        </Grid>
-      </>
-    )
-  }
-
   render () {
     const {
       balance,
       firstLoad,
       enabledMain,
-      ui,
-      tipsList
+      recurringList,
+      reconcileStamp
     } = this.props.rewardsData
-    const { walletImported } = ui
     const showDisabled = firstLoad !== false || !enabledMain
-    const tipRows = this.getTipsRows()
+    const tipRows = this.getRows()
     const topRows = tipRows.slice(0, 5)
     const numRows = tipRows && tipRows.length
     const allSites = !(numRows > 5)
-    const total = utils.tipsListTotal(tipsList, true)
+    const total = utils.tipsListTotal(recurringList)
     const converted = utils.convertBalance(total, balance.rates)
 
     return (
       <Box
-        title={getLocale('donationTitle')}
         type={'donation'}
-        description={getLocale('donationDesc')}
+        title={getLocale('monthlyContributionTitle')}
+        description={getLocale('monthlyContributionDesc')}
         disabledContent={showDisabled ? this.disabledContent() : null}
-        attachedAlert={this.importAlert(walletImported)}
-        settingsChild={this.donationSettingsChild()}
-        settingsOpened={this.state.settings}
-        onSettingsClick={this.onSettingsToggle}
       >
         {
           this.state.modalShowAll
@@ -205,9 +123,15 @@ class TipBox extends React.Component<Props, State> {
           />
           : null
         }
-        <List title={getLocale('donationTotalDonations')}>
+        <List title={getLocale('donationTotalMonthlyContribution')}>
           <Tokens value={total} converted={converted} />
         </List>
+        <List title={getLocale('donationNextDate')}>
+          <NextContribution>
+            {new Intl.DateTimeFormat('default', { month: 'short', day: 'numeric' }).format(reconcileStamp * 1000)}
+          </NextContribution>
+        </List>
+
         <TableDonation
           rows={topRows}
           allItems={allSites}
@@ -233,4 +157,4 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(TipBox)
+)(MonthlyContributionBox)

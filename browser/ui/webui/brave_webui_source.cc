@@ -263,6 +263,7 @@ void CustomizeWebUIHTMLSource(const std::string &name,
         { "donationTitle",  IDS_BRAVE_REWARDS_LOCAL_DONAT_TITLE },
         { "donationDesc",  IDS_BRAVE_REWARDS_LOCAL_DONAT_DESC },
         { "donationTotalDonations",  IDS_BRAVE_REWARDS_LOCAL_DONAT_TOTAL_DONATIONS },            // NOLINT
+        { "donationTotalMonthlyContribution",  IDS_BRAVE_REWARDS_LOCAL_DONAT_TOTAL_MONTHLY_CONTRIBUTION },       // NOLINT
         { "donationVisitSome",  IDS_BRAVE_REWARDS_LOCAL_DONAT_VISIT_SOME },
         { "donationAbility",  IDS_BRAVE_REWARDS_LOCAL_DONAT_ABILITY },
         { "donationAbilityYT",  IDS_BRAVE_REWARDS_LOCAL_DONAT_ABILITY_YT },
@@ -272,6 +273,8 @@ void CustomizeWebUIHTMLSource(const std::string &name,
         { "donationDisabledText1",  IDS_BRAVE_REWARDS_LOCAL_DONAT_DISABLED_TEXT1 },              // NOLINT
         { "donationDisabledText2",  IDS_BRAVE_REWARDS_LOCAL_DONAT_DISABLED_TEXT2 },              // NOLINT
         { "donationNextDate",  IDS_BRAVE_REWARDS_LOCAL_DONAT_NEXT_DATE },
+        { "monthlyContributionTitle",  IDS_BRAVE_REWARDS_LOCAL_MONTHLY_CONTRIBUTION_TITLE },         // NOLINT
+        { "monthlyContributionDesc",  IDS_BRAVE_REWARDS_LOCAL_MONTHLY_CONTRIBUTION_DESC },           // NOLINT
 
         { "panelAddFunds",  IDS_BRAVE_REWARDS_LOCAL_PANEL_ADD_FUNDS },
         { "panelWithdrawFunds",  IDS_BRAVE_REWARDS_LOCAL_PANEL_WITHDRAW_FUNDS },
