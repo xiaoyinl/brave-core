@@ -12,6 +12,10 @@
     "includes": [33070],
   },
   # This file is generated during the build.
+  "<(ROOT_GEN_DIR)/brave/web-ui-brave_webcompat_reporter/brave_webcompat_reporter.grd": {
+    "includes": [33100],
+  },
+  # This file is generated during the build.
   "<(ROOT_GEN_DIR)/brave/web-ui-brave_new_tab/brave_new_tab.grd": {
     "includes": [33140],
   },

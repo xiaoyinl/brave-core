@@ -7,7 +7,8 @@ export {
   ModalLayout,
   PaddedButton,
   TextSection,
-  IconTitle
+  IconTitle,
+  CardLayout
 } from './structure'
 
 export {

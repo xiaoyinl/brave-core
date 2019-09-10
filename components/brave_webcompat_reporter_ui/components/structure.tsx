@@ -5,6 +5,7 @@
 import * as React from 'react'
 import styled from 'brave-ui/theme'
 import Button, { Props as ButtonProps } from 'brave-ui/components/buttonsIndicators/button'
+import { Content as CardContent } from 'brave-ui/components/layout/card/style'
 
 export const SideBySideButtons = styled<{}, 'div'>('div')`
   box-sizing: border-box;
@@ -35,3 +36,13 @@ export const IconTitle = styled<{}, 'div'>('div')`
   display: flex;
   flex-direction: row;
 `
+
+interface CardLayoutProps {
+  children?: React.ReactNode
+}
+
+export const CardLayout = (props: CardLayoutProps) => (
+  <CardContent useDefaultContentPadding={true} emphasis={'50'}>
+    {props.children}
+  </CardContent>
+)

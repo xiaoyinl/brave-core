@@ -26,6 +26,9 @@ declare global {
     brave_adblock: {
       initialize: () => void
     }
+    brave_webcompat_reporter: {
+      initialize: () => void
+    }
     brave_new_tab: {
       initialize: () => void
       statsUpdated: () => void
