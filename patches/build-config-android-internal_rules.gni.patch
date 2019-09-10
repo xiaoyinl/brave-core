@@ -1,0 +1,12 @@
+diff --git a/build/config/android/internal_rules.gni b/build/config/android/internal_rules.gni
+index c4a8508fabc50b871901205f267df8f8b392a709..2f3b2c6d34e858052d784d65a5e60add3f7a580b 100644
+--- a/build/config/android/internal_rules.gni
++++ b/build/config/android/internal_rules.gni
+@@ -40,6 +40,7 @@ _java_target_whitelist = [
+ 
+ # Targets that match the whitelist but are not actually java targets.
+ _java_target_blacklist = [ "*:*_unpack_aar" ]
++_java_target_blacklist += [ "//brave:packed_resources" ]
+ 
+ _r8_path = "//third_party/r8/lib/r8.jar"
+ 
