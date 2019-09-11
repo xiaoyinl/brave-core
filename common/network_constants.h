@@ -12,6 +12,7 @@ extern const char kBraveReferralsServer[];
 extern const char kBraveReferralsHeadersPath[];
 extern const char kBraveReferralsInitPath[];
 extern const char kBraveReferralsActivityPath[];
+extern const char kBraveWebcompatReportEndpoint[];
 extern const char kBraveSafeBrowsingFileCheckProxy[];
 extern const char kBraveRedirectorProxy[];
 extern const char kBraveClients4Proxy[];

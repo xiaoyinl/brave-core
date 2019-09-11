@@ -16,6 +16,8 @@ const char kBraveReferralsHeadersPath[] = "/promo/custom-headers";
 const char kBraveReferralsInitPath[] = "/promo/initialize/nonua";
 const char kBraveReferralsActivityPath[] = "/promo/activity";
 
+const char kBraveWebcompatReportEndpoint[] = "http://laptop-updates-pre.brave.com/1/webcompat";
+
 const char kBraveSafeBrowsingFileCheckProxy[] = "sb-ssl.brave.com";
 const char kBraveRedirectorProxy[] = "redirector.brave.com";
 const char kBraveClients4Proxy[] = "clients4.brave.com";

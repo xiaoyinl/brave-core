@@ -13,6 +13,8 @@
 #include "content/public/browser/web_ui_data_source.h"
 #include "content/public/browser/web_ui_message_handler.h"
 
+#include "brave/browser/brave_webcompat_reporter/webcompat_reporter_service.h"
+
 namespace {
 
 class WebcompatReporterDOMHandler : public content::WebUIMessageHandler {
@@ -25,11 +27,13 @@ class WebcompatReporterDOMHandler : public content::WebUIMessageHandler {
 
  private:
   void HandleSubmitReport(const base::ListValue* args);
+  std::unique_ptr<brave::BraveWebcompatReporterService> sender_;
 
   DISALLOW_COPY_AND_ASSIGN(WebcompatReporterDOMHandler);
 };
 
-WebcompatReporterDOMHandler::WebcompatReporterDOMHandler() {}
+WebcompatReporterDOMHandler::WebcompatReporterDOMHandler()
+    : sender_(std::make_unique<brave::BraveWebcompatReporterService>()) {}
 
 WebcompatReporterDOMHandler::~WebcompatReporterDOMHandler() {}
 
@@ -45,8 +49,8 @@ void WebcompatReporterDOMHandler::HandleSubmitReport(const base::ListValue* args
   std::string site_url;
   if (!args->GetString(0, &site_url))
     return;
-  LOG(INFO) << "Submitting webcompat report for " << site_url << std::endl;
-  // TODO actually submit the report
+
+  sender_->SubmitReport(site_url);
 }
 
 }  // namespace

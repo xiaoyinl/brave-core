@@ -28,6 +28,8 @@ source_set("browser_process") {
     "brave_shields/cookie_pref_service_factory.h",
     "brave_webcompat_reporter/webcompat_reporter_dialog.cc",
     "brave_webcompat_reporter/webcompat_reporter_dialog.h",
+    "brave_webcompat_reporter/webcompat_reporter_service.cc",
+    "brave_webcompat_reporter/webcompat_reporter_service.h",
     "brave_browser_main_extra_parts.cc",
     "brave_browser_main_extra_parts.h",
     "brave_browser_main_parts.cc",
