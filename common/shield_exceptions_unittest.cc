@@ -58,6 +58,28 @@ TEST_F(BraveShieldsExceptionsTest, IsWhitelistedFingerprintingException) {
   EXPECT_FALSE(IsWhitelistedFingerprintingException(
       GURL("https://www.sandbox.uphold.com/"),
       GURL("https://netverify.com/iframe")));
+
+  EXPECT_TRUE(IsWhitelistedFingerprintingException(
+      GURL("https://brave.1password.com"),
+      GURL("https://map.1passwordservices.com/iframe")));
+  EXPECT_TRUE(IsWhitelistedFingerprintingException(
+      GURL("https://brave.1password.com/randompath"),
+      GURL("https://map.1passwordservices.com/")));
+  EXPECT_TRUE(IsWhitelistedFingerprintingException(
+      GURL("https://1password.com/"),
+      GURL("https://map.1passwordservices.com/")));
+  EXPECT_FALSE(IsWhitelistedFingerprintingException(
+      GURL("https://11password.com/"),
+      GURL("http://map.1passwordservices.com/")));
+  EXPECT_FALSE(IsWhitelistedFingerprintingException(
+      GURL("https://map.1passwordservices.com/"),
+      GURL("https://map.1passwordservices.com/")));
+  EXPECT_FALSE(IsWhitelistedFingerprintingException(
+      GURL("http://brave.1password.com/"),
+      GURL("https://map.1passwordservices.com/iframe")));
+  EXPECT_FALSE(IsWhitelistedFingerprintingException(
+      GURL("https://1password.1passwordservices.com/"),
+      GURL("https://map.1passwordservices.com/")));
 }
 
 }  // namespace
