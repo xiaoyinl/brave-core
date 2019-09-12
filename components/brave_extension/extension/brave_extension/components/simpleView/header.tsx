@@ -20,7 +20,7 @@ import {
   TotalBlockedStatsNumber,
   TotalBlockedStatsText,
   DisabledContentView,
-  ShieldIcon,
+  ShieldsButton,
   DisabledContentText,
   Toggle
  } from 'brave-ui/features/shields'
@@ -42,6 +42,7 @@ interface CommonProps {
   hostname: string
   shieldsToggled: ShieldsToggled
   toggleReadOnlyView: () => void
+  reportBrokenSite: () => void
 }
 
 interface BlockedItemsProps {
@@ -72,7 +73,7 @@ export default class Header extends React.PureComponent<Props, {}> {
   }
 
   render () {
-    const { enabled, favicon, hostname, toggleReadOnlyView } = this.props
+    const { enabled, favicon, hostname, toggleReadOnlyView, reportBrokenSite } = this.props
     return (
       <ShieldsHeader status={enabled ? 'enabled' : 'disabled'}>
         <MainToggle status={enabled ? 'enabled' : 'disabled'}>
@@ -106,8 +107,8 @@ export default class Header extends React.PureComponent<Props, {}> {
             )
             : (
               <DisabledContentView>
-                <div><ShieldIcon /></div>
                 <DisabledContentText>{getLocale('disabledMessage')}</DisabledContentText>
+                <ShieldsButton level='secondary' type='default' size='small' onClick={reportBrokenSite} text={getLocale('reportBrokenSite')} />
               </DisabledContentView>
             )
           }
