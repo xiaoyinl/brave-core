@@ -1,0 +1,12 @@
+diff --git a/chrome/installer/linux/common/wrapper b/chrome/installer/linux/common/wrapper
+index dbbeb27ea037ae1046c38f4006ddccabfeea9e18..4aea7fbb7dc464aad4232b71de2eb940a0ddbf4e 100755
+--- a/chrome/installer/linux/common/wrapper
++++ b/chrome/installer/linux/common/wrapper
+@@ -46,4 +46,6 @@ exec > >(exec cat)
+ exec 2> >(exec cat >&2)
+ 
+ # Note: exec -a below is a bashism.
+-exec -a "$0" "$HERE/@@PROGNAME@@" "$@"
++#exec -a "$0" "$HERE/@@PROGNAME@@" "$@"
++# Hack to work around brave/brave-browser#4142
++"$HERE/@@PROGNAME@@" "$@" || true
