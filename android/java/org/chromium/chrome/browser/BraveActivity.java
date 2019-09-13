@@ -7,6 +7,7 @@ package org.chromium.chrome.browser;
 
 import android.content.Context;
 
+import org.chromium.base.ContextUtils;
 import org.chromium.base.Log;
 import org.chromium.base.annotations.JNINamespace;
 import org.chromium.chrome.browser.preferences.Pref;
@@ -17,6 +18,8 @@ import org.chromium.chrome.browser.preferences.PrefServiceBridge;
  */
 @JNINamespace("chrome::android")
 public abstract class BraveActivity extends ChromeActivity {
+    private static final String PREF_CLOSE_TABS_ON_EXIT = "close_tabs_on_exit";
+
     @Override
     public void onResumeWithNative() {
         super.onResumeWithNative();
@@ -30,6 +33,10 @@ public abstract class BraveActivity extends ChromeActivity {
         // Disable NTP suggestions
         PrefServiceBridge.getInstance().setBoolean(Pref.NTP_ARTICLES_SECTION_ENABLED, false);
         PrefServiceBridge.getInstance().setBoolean(Pref.NTP_ARTICLES_LIST_VISIBLE, false);
+    }
+
+    public boolean isNoRestoreState() {
+        return ContextUtils.getAppSharedPreferences().getBoolean(PREF_CLOSE_TABS_ON_EXIT, false);
     }
 
     private native void nativeRestartStatsUpdater();

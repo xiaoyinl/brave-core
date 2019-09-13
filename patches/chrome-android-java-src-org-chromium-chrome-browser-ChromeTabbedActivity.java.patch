@@ -1,5 +1,5 @@
 diff --git a/chrome/android/java/src/org/chromium/chrome/browser/ChromeTabbedActivity.java b/chrome/android/java/src/org/chromium/chrome/browser/ChromeTabbedActivity.java
-index a168b085348c218c2951964beb37e0a25d754836..ad5cf672b9548a4f9921c4bc3521a0c8111e998d 100644
+index a168b085348c218c2951964beb37e0a25d754836..3bdc54a12562f719ae51889277f52bf391274952 100644
 --- a/chrome/android/java/src/org/chromium/chrome/browser/ChromeTabbedActivity.java
 +++ b/chrome/android/java/src/org/chromium/chrome/browser/ChromeTabbedActivity.java
 @@ -174,7 +174,7 @@ import java.util.Locale;
@@ -11,3 +11,11 @@ index a168b085348c218c2951964beb37e0a25d754836..ad5cf672b9548a4f9921c4bc3521a0c8
      @IntDef({BackPressedResult.NOTHING_HAPPENED, BackPressedResult.HELP_URL_CLOSED,
              BackPressedResult.MINIMIZED_NO_TAB_CLOSED, BackPressedResult.MINIMIZED_TAB_CLOSED,
              BackPressedResult.TAB_CLOSED, BackPressedResult.TAB_IS_NULL,
+@@ -1161,6 +1161,7 @@ public class ChromeTabbedActivity
+                     CipherFactory.getInstance().restoreFromBundle(getSavedInstanceState());
+ 
+             boolean noRestoreState =
++                    super.isNoRestoreState() ||
+                     CommandLine.getInstance().hasSwitch(ChromeSwitches.NO_RESTORE_STATE);
+             if (noRestoreState) {
+                 // Clear the state files because they are inconsistent and useless from now on.

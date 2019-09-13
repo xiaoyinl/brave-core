@@ -123,6 +123,12 @@ This file contains all "about" strings.  It is set to NOT be translated, in tran
       <message name="IDS_FINGERPRINTING_PROTECTION_SUMMARY" desc="Summary for fingerprinting protection.">
         Prevents browser from fingerprinting
       </message>
+      <message name="IDS_CLOSE_TABS_ON_EXIT_TITLE" desc="Title for closing tabs on exit.">
+        Close tabs on exit
+      </message>
+      <message name="IDS_CLOSE_TABS_ON_EXIT_SUMMARY" desc="Summary for closing tabs on exit.">
+        Don't persist tabs between browsing sessions
+      </message>
     </messages>
   </release>
 </grit>
