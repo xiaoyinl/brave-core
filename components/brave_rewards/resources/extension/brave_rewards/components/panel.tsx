@@ -237,7 +237,7 @@ export class Panel extends React.Component<Props, State> {
     }
   }
 
-  showTipSiteDetail = () => {
+  showTipSiteDetail = (monthly = false) => {
     const publisher: RewardsExtension.Publisher | undefined = this.getPublisher()
     // TODO: why do we store windowId instead of active tab id in state?
     chrome.tabs.query({
@@ -252,7 +252,7 @@ export class Panel extends React.Component<Props, State> {
         return
       }
 
-      chrome.braveRewards.tipSite(tabId, publisher.publisher_key)
+      chrome.braveRewards.tipSite(tabId, publisher.publisher_key, monthly)
       window.close()
     })
   }
@@ -664,6 +664,7 @@ export class Panel extends React.Component<Props, State> {
               onRefreshPublisher={this.refreshPublisher}
               refreshingPublisher={this.state.refreshingPublisher}
               publisherRefreshed={this.state.publisherRefreshed}
+              setMonthlyAction={this.showTipSiteDetail.bind(this, true)}
             />
             : null
           }
