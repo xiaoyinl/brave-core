@@ -119,7 +119,8 @@ void TorLauncherImpl::Launch(const TorConfig& config,
     args.AppendArgPath(tor_data_path);
     args.AppendArg("--Log");
     base::CommandLine::StringType log_file;
-    log_file += FILE_PATH_LITERAL("notice file ");
+    // Don't write remotely triggerable message to log file.
+    log_file += FILE_PATH_LITERAL("[app]err [~app]notice file ");
     args.AppendArgNative(log_file +
                          tor_data_path.AppendASCII("tor.log").value());
   }
